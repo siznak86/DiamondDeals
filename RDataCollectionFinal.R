@@ -1,6 +1,8 @@
 library(rvest)
 library(dplyr)
 library(tidyr)
+library(formattable)
+library(stringr)
  
 # Collecting Data on Batting Years of 2021 and 2022
 # List of URLs
@@ -78,6 +80,9 @@ write.csv(finalStatHeadPitching, "finalStatHeadPitching.csv", row.names = FALSE)
 names(BaseSalaries2022) <- c("Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
 # deleting the first row
 BaseSalaries2022 <- BaseSalaries2022[-1,]
+# adding NA
+BaseSalaries2022 <- apply(BaseSalaries2022, c(1, 2), function(x) ifelse(x == "", NA, x))
+
 # Save to a CSV file
 write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
 
@@ -86,6 +91,8 @@ write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
 names(BaseSalaries2023) <- c("Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
 # deleting the first row
 BaseSalaries2023 <- BaseSalaries2023[-1,]
+# adding NA
+BaseSalaries2023 <- apply(BaseSalaries2023, c(1, 2), function(x) ifelse(x == "", NA, x))
 # Save to a CSV file
 write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
  
@@ -197,6 +204,49 @@ SeasonTrades2022 <- separate(SeasonTrades2022, Team2Position6, into = c("Team2Po
 SeasonTrades2022$Team2Position6 <- gsub("\\(|\\)", "", SeasonTrades2022$Team2Position6)
 SeasonTrades2022$Team2Cash6 <- gsub("[^0-9]", "", SeasonTrades2022$Team2Cash6)
 
+# converting Team*Cash* to numeric currency
+# Convert the character column to numeric (remove "$" and ",")
+SeasonTrades2022$Team1Cash1 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash1))
+# Format the numeric column as currency
+SeasonTrades2022$Team1Cash1 <- currency(SeasonTrades2022$Team1Cash1)
+
+SeasonTrades2022$Team1Cash2 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash2))
+SeasonTrades2022$Team1Cash2 <- currency(SeasonTrades2022$Team1Cash2)
+
+SeasonTrades2022$Team1Cash3 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash3))
+SeasonTrades2022$Team1Cash3 <- currency(SeasonTrades2022$Team1Cash3)
+
+SeasonTrades2022$Team1Cash4 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash4))
+SeasonTrades2022$Team1Cash4 <- currency(SeasonTrades2022$Team1Cash4)
+
+SeasonTrades2022$Team1Cash5 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash5))
+SeasonTrades2022$Team1Cash5 <- currency(SeasonTrades2022$Team1Cash5)
+
+SeasonTrades2022$Team1Cash6 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash6))
+SeasonTrades2022$Team1Cash6 <- currency(SeasonTrades2022$Team1Cash6)
+
+# Team 2
+SeasonTrades2022$Team2Cash1 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team2Cash1))
+SeasonTrades2022$Team2Cash1 <- currency(SeasonTrades2022$Team2Cash1)
+
+SeasonTrades2022$Team2Cash2 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team2Cash2))
+SeasonTrades2022$Team2Cash2 <- currency(SeasonTrades2022$Team2Cash2)
+
+SeasonTrades2022$Team2Cash3 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team2Cash3))
+SeasonTrades2022$Team2Cash3 <- currency(SeasonTrades2022$Team2Cash3)
+
+SeasonTrades2022$Team2Cash4 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team2Cash4))
+SeasonTrades2022$Team2Cash4 <- currency(SeasonTrades2022$Team2Cash4)
+
+SeasonTrades2022$Team2Cash5 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team2Cash5))
+SeasonTrades2022$Team2Cash5 <- currency(SeasonTrades2022$Team2Cash5)
+
+SeasonTrades2022$Team2Cash6 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team2Cash6))
+SeasonTrades2022$Team2Cash6 <- currency(SeasonTrades2022$Team2Cash6)
+
+#Adding NA to empty cells
+SeasonTrades2022 <- apply(SeasonTrades2022, c(1, 2), function(x) ifelse(x == "", NA, x))
+
 # Save to a CSV file
 write.csv(SeasonTrades2022, "SeasonTrades2022.csv", row.names = FALSE)
 
@@ -264,3 +314,40 @@ SeasonTrades2023 <- separate(SeasonTrades2023, Team2Position3, into = c("Team2Po
 # remove ()
 SeasonTrades2023$Team2Position3 <- gsub("\\(|\\)", "", SeasonTrades2023$Team2Position3)
 SeasonTrades2023$Team2Cash3 <- gsub("[^0-9]", "", SeasonTrades2023$Team2Cash3)
+
+# converting Team*Cash* to numeric currency
+# Convert the character column to numeric (remove "$" and ",")
+SeasonTrades2023$Team1Cash1 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash1))
+# Format the numeric column as currency
+SeasonTrades2023$Team1Cash1 <- currency(SeasonTrades2023$Team1Cash1)
+
+SeasonTrades2023$Team1Cash2 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash2))
+SeasonTrades2023$Team1Cash2 <- currency(SeasonTrades2023$Team1Cash2)
+
+SeasonTrades2023$Team1Cash3 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash3))
+SeasonTrades2023$Team1Cash3 <- currency(SeasonTrades2023$Team1Cash3)
+
+SeasonTrades2023$Team1Cash4 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash4))
+SeasonTrades2023$Team1Cash4 <- currency(SeasonTrades2023$Team1Cash4)
+
+SeasonTrades2023$Team1Cash5 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash5))
+SeasonTrades2023$Team1Cash5 <- currency(SeasonTrades2023$Team1Cash5)
+
+SeasonTrades2023$Team1Cash6 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash6))
+SeasonTrades2023$Team1Cash6 <- currency(SeasonTrades2023$Team1Cash6)
+
+# Team 2
+SeasonTrades2023$Team2Cash1 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team2Cash1))
+SeasonTrades2023$Team2Cash1 <- currency(SeasonTrades2023$Team2Cash1)
+
+SeasonTrades2023$Team2Cash2 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team2Cash2))
+SeasonTrades2023$Team2Cash2 <- currency(SeasonTrades2023$Team2Cash2)
+
+SeasonTrades2023$Team2Cash3 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team2Cash3))
+SeasonTrades2023$Team2Cash3 <- currency(SeasonTrades2023$Team2Cash3)
+
+#Adding NA to empty cells
+SeasonTrades2023 <- apply(SeasonTrades2023, c(1, 2), function(x) ifelse(x == "", NA, x))
+
+# Save to a CSV file
+write.csv(SeasonTrades2023, "SeasonTrades2023.csv", row.names = FALSE)
