@@ -78,13 +78,18 @@
 names(BaseSalaries2022) <- c("Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
  # deleting the first row
  BaseSalaries2022 <- BaseSalaries2022[-1,]
+ # Save to a CSV file
+ write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
 
  # Editing Base Salaries 2023
  # renaming columns
  names(BaseSalaries2023) <- c("Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
  # deleting the first row
  BaseSalaries2023 <- BaseSalaries2023[-1,]
-  
+ # Save to a CSV file
+ write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
+ 
+ 
  # Editing Free Agency
  # Splitting Name and Date
  FreeAgency <- separate(FreeAgency, DATE, into = c("Date", "Name2"), sep = "(?<=\\d)(?=[A-Za-z])", remove = TRUE)
@@ -95,5 +100,7 @@ names(BaseSalaries2022) <- c("Player", "Pos", "Age", "Bats", "Throws", "BaseSala
  FreeAgency[147, ] <- new_data
 # deleting extra name column
  FreeAgency <- FreeAgency %>% select(-Name2)
-
+ # Save to a CSV file
+ write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
+ 
   
