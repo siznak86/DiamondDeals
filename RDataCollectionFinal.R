@@ -3,6 +3,7 @@ library(dplyr)
 library(tidyr)
 library(formattable)
 library(stringr)
+library(stringi)
  
 # Collecting Data on Batting Years of 2021 and 2022
 # List of URLs
@@ -39,10 +40,80 @@ for (url in urls) {
 }
 # Combine all data frames
 finalStatHeadBatting <- do.call(rbind, statHead_list_Batting)
+
+# Separating 2021 and 2022
+split_data <- split(finalStatHeadBatting, finalStatHeadBatting$Season)
+list_of_dataframes <- lapply(names(split_data), function(year) {
+  data.frame(Season = as.integer(year), split_data[[year]])
+})
+
+for (year in names(split_data)) {
+  assign(paste0("season_", year), split_data[[year]], envir = .GlobalEnv)
+}
+
 # Save data frame 
-write.csv(finalStatHeadBatting, "finalStatHeadBatting.csv", row.names = FALSE)
- 
- 
+write.csv(season_2021, "StatHeadBatting2021.csv", row.names = FALSE)
+
+#Find Duplicate Names
+duplicate_players2021 <- season_2021$Player[duplicated(season_2021$Player)]
+View(duplicate_players2021)
+#Find Duplicate Names
+duplicate_players2022 <- season_2022$Player[duplicated(season_2022$Player)]
+View(duplicate_players2022)
+# Edit players name in excel
+
+#creating a PlayerID
+StatHeadBatting2021 <- StatHeadBatting2021 %>% arrange(Player) %>% mutate(PlayerID = row_number())
+#move the Player ID to first column
+StatHeadBatting2021 <- StatHeadBatting2021 %>% select(PlayerID, everything())
+
+# Save data frame 
+write.csv(season_2021, "StatHeadBatting2021.csv", row.names = FALSE)
+write.csv(season_2022, "StatHeadBatting2022.csv", row.names = FALSE)
+
+#joinning for same player ID
+# Combine the two datasets and create a mapping dataset
+combinedDataset <- bind_rows(
+  mutate(StatHeadBatting2021, isNew = FALSE),
+  mutate(StatHeadBatting2022, isNew = TRUE)
+)
+# Duplicate PlayerID for players with the same name
+combinedDataset <- combinedDataset %>%
+  group_by(Player) %>%
+  mutate(PlayerID = ifelse(n() > 1, rep(PlayerID[1], n()), PlayerID))
+# save and add new playerids in excel
+write.csv(combinedDataset, "combinedBattingDataset.csv", row.names = FALSE)
+
+# create a dataset of just names and player ids
+PlayerIDs <- combinedBattingDataset %>% distinct(PlayerID, Player)
+# saving as CSV
+write.csv(PlayerIDs, "PlayerIDs.csv", row.names = FALSE)
+
+#Clean Data 
+replace_special_chars <- function(text) {
+  # Replace special characters with their Latin equivalents
+  cleaned_text <- iconv(text, to = "ASCII//TRANSLIT")
+  return(cleaned_text)
+}
+Batting_cleaned <- combinedBattingDataset %>%
+  mutate(CleanedPlayer = replace_special_chars(Player))
+
+Batting_cleaned <- Batting_cleaned %>% mutate(Player = CleanedPlayer)
+
+combinedBattingDataset_cleaned <- Batting_cleaned %>% select(-isNew, -CleanedPlayer)
+write.csv(combinedBattingDataset_cleaned, "combinedBattingDataset.csv", row.names = FALSE)
+
+PlayerID_cleaned <- PlayerIDs %>%
+  mutate(CleanedPlayer = replace_special_chars(Player))
+
+PlayerID_cleaned <- PlayerID_cleaned %>% mutate(Player = CleanedPlayer)
+
+PlayerIDs <- PlayerID_cleaned %>% select(-CleanedPlayer)
+write.csv(PlayerIDs, "PlayerIDs.csv", row.names = FALSE)
+
+
+
+
 #Collecting Data on Pitching Years of 2021 and 2022
 # List of URLs
 urls <- c(
@@ -73,8 +144,60 @@ for (url in urls) {
 finalStatHeadPitching <- do.call(rbind, statHead_list_Pitching)
 # Save to a CSV file
 write.csv(finalStatHeadPitching, "finalStatHeadPitching.csv", row.names = FALSE)
+
+# Separating 2021 and 2022
+split_data <- split(finalStatHeadPitching, finalStatHeadPitching$Season)
+list_of_dataframes <- lapply(names(split_data), function(year) {
+  data.frame(Season = as.integer(year), split_data[[year]])
+})
+
+for (year in names(split_data)) {
+  assign(paste0("seasonp_", year), split_data[[year]], envir = .GlobalEnv)
+}
+
+#Find Duplicate Names
+duplicate_playersp2021 <- seasonp_2021$Player[duplicated(seasonp_2021$Player)]
+View(duplicate_playersp2021)
+#Find Duplicate Names
+duplicate_playersp2022 <- seasonp_2022$Player[duplicated(seasonp_2022$Player)]
+View(duplicate_playersp2022)
+# Edit players name in excel
+
+# Save data frame 
+write.csv(seasonp_2021, "StatHeadPitching2021.csv", row.names = FALSE)
+write.csv(seasonp_2022, "StatHeadPitching2022.csv", row.names = FALSE)
  
- 
+#Joining PlayerId to Pitching
+StatHeadPitching2021 <- StatHeadPitching2021 %>%
+  left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+
+StatHeadPitching2022 <- StatHeadPitching2022 %>%
+  left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+
+#move the Player ID to first column
+StatHeadPitching2021 <- StatHeadPitching2021 %>% select(PlayerID, everything())
+StatHeadPitching2022 <- StatHeadPitching2022 %>% select(PlayerID, everything())
+#Saving
+write.csv(StatHeadPitching2021, "StatHeadPitching2021.csv", row.names = FALSE)
+write.csv(StatHeadPitching2022, "StatHeadPitching2022.csv", row.names = FALSE)
+
+#combining pitching data
+combinedPitchingDataset <- bind_rows(StatHeadPitching2021, StatHeadPitching2022)
+#Saving
+write.csv(combinedPitchingDataset, "combinedPitchingDataset.csv", row.names = FALSE)
+
+#replacing names with cleaned names
+cleanedPitching <- combinedPitchingDataset %>%
+  left_join(PlayerIDs,  by = "PlayerID") 
+
+cleanedPitching <- cleanedPitching %>% mutate(Player.x = Player.y)
+
+combinedPitchingDataset_cleaned <- cleanedPitching %>% select(-Player.y)
+combinedPitchingDataset_cleaned <- combinedPitchingDataset_cleaned %>% rename(Player = Player.x)
+
+write.csv(combinedPitchingDataset_cleaned, "combinedPitchingDataset.csv", row.names = FALSE)
+
+
 # Editing Base Salaries 2022
 # renaming columns
 names(BaseSalaries2022) <- c("Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
@@ -82,9 +205,35 @@ names(BaseSalaries2022) <- c("Player", "Pos", "Age", "Bats", "Throws", "BaseSala
 BaseSalaries2022 <- BaseSalaries2022[-1,]
 # adding NA
 BaseSalaries2022 <- apply(BaseSalaries2022, c(1, 2), function(x) ifelse(x == "", NA, x))
-
+# moving playerid column
+BaseSalaries2022 <- BaseSalaries2022 %>% select(PlayerID, everything())
 # Save to a CSV file
 write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
+
+
+# Cleaning Names
+replace_special_chars <- function(text) {
+  # Replace special characters with their Latin equivalents
+  cleaned_text <- iconv(text, to = "ASCII//TRANSLIT")
+  return(cleaned_text)
+}
+BaseSalaries2022_cleaned <- BaseSalaries2022 %>%
+  mutate(CleanedPlayer = replace_special_chars(Player))
+
+BaseSalaries2022_cleaned <- BaseSalaries2022_cleaned %>% mutate(Player = CleanedPlayer)
+
+BaseSalaries2022 <- BaseSalaries2022_cleaned %>% select(-CleanedPlayer)
+# adding Player ID
+#Joining PlayerId to Pitching
+BaseSalaries2022 <- BaseSalaries2022 %>%
+  left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+
+write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
+# Edit names and Ids in excel
+names(BaseSalaries2022) <- c("PlayerID", "Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
+BaseSalaries2022 <- BaseSalaries2022[-1,]
+
+
 
 # Editing Base Salaries 2023
 # renaming columns
@@ -96,6 +245,30 @@ BaseSalaries2023 <- apply(BaseSalaries2023, c(1, 2), function(x) ifelse(x == "",
 # Save to a CSV file
 write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
  
+BaseSalaries2023_cleaned <- BaseSalaries2023 %>%
+  mutate(CleanedPlayer = replace_special_chars(Player))
+
+BaseSalaries2023_cleaned <- BaseSalaries2023_cleaned %>% mutate(Player = CleanedPlayer)
+
+BaseSalaries2023 <- BaseSalaries2023_cleaned %>% select(-CleanedPlayer)
+
+BaseSalaries2023 <- BaseSalaries2023 %>%
+  left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+
+BaseSalaries2023 <- BaseSalaries2023 %>% select(PlayerID, everything())
+
+write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
+
+names(BaseSalaries2023) <- c("PlayerID", "Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
+BaseSalaries2023 <- BaseSalaries2023[-1,]
+BaseSalaries2023 <- BaseSalaries2023 %>%
+  left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+BaseSalaries2023 <- BaseSalaries2023 %>% mutate(PlayerID.x = PlayerID.y)
+BaseSalaries2023 <- BaseSalaries2023 %>% select(-PlayerID.y)
+BaseSalaries2023 <- BaseSalaries2023 %>% mutate(PlayerID = PlayerID.x)
+BaseSalaries2023 <- BaseSalaries2023 %>% select(-PlayerID.x)
+BaseSalaries2023 <- BaseSalaries2023 %>% select(PlayerID, everything())
+write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
  
 # Editing Free Agency
 # Splitting Name and Date
@@ -109,6 +282,20 @@ FreeAgency[147, ] <- new_data
 FreeAgency <- FreeAgency %>% select(-Name2)
 # Save to a CSV file
 write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
+
+# add playerid
+FreeAgency <- FreeAgency %>% rename(Player = Name)
+
+FreeAgency <- FreeAgency %>%
+  left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+FreeAgency <- FreeAgency %>% select(PlayerID, everything())
+
+write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
+
+
+
+
+
  
 # Editing 2002 Trades
 # combine date
