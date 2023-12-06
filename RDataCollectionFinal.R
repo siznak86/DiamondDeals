@@ -1,3 +1,5 @@
+# Adding data and some light wrangling
+
 library(rvest)
 library(dplyr)
 library(tidyr)
@@ -111,8 +113,11 @@ PlayerID_cleaned <- PlayerID_cleaned %>% mutate(Player = CleanedPlayer)
 PlayerIDs <- PlayerID_cleaned %>% select(-CleanedPlayer)
 write.csv(PlayerIDs, "PlayerIDs.csv", row.names = FALSE)
 
-
-
+# create 2021 and 2022 datasets
+BattingDataset2021 <- filter(combinedBattingDataset, Season == 2021)
+BattingDataset2022 <- filter(combinedBattingDataset, Season == 2022)
+write.csv(BattingDataset2021, "BattingDataset2021.csv", row.names = FALSE)
+write.csv(BattingDataset2022, "BattingDataset2022.csv", row.names = FALSE)
 
 #Collecting Data on Pitching Years of 2021 and 2022
 # List of URLs
@@ -196,6 +201,12 @@ combinedPitchingDataset_cleaned <- cleanedPitching %>% select(-Player.y)
 combinedPitchingDataset_cleaned <- combinedPitchingDataset_cleaned %>% rename(Player = Player.x)
 
 write.csv(combinedPitchingDataset_cleaned, "combinedPitchingDataset.csv", row.names = FALSE)
+
+# create 2021 and 2022 datasets
+PitchingDataset2021 <- filter(combinedPitchingDataset, Season == 2021)
+PitchingDataset2022 <- filter(combinedPitchingDataset, Season == 2022)
+write.csv(PitchingDataset2021, "PitchingDataset2021.csv", row.names = FALSE)
+write.csv(PitchingDataset2022, "PitchingDataset2022.csv", row.names = FALSE)
 
 
 # Editing Base Salaries 2022
@@ -289,6 +300,9 @@ FreeAgency <- FreeAgency %>% rename(Player = Name)
 FreeAgency <- FreeAgency %>%
   left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
 FreeAgency <- FreeAgency %>% select(PlayerID, everything())
+
+#Changing Position to Pos
+FreeAgency <- FreeAgency %>% rename(Pos = Position)
 
 write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
 
