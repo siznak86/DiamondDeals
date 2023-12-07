@@ -36,14 +36,23 @@ combinedPitchingDataset <- combinedPitchingDataset %>% mutate(SimplePos = case_w
 ))
 
 #free agency dataset
-FreeAgency <- FreeAgency %>%
+Free.Agency.2022 <- Free.Agency.2022 %>% 
   mutate(dummy_Pos = case_when(
-    Position %in% c("RP", "SP", "P") ~ 1,
-    Position %in% c("C", "1B", "2B", "3B", "SS") ~ 2,
-    Position %in% c("LF", "CF", "RF", "OF") ~ 3,
-    Position %in% c("DH") ~ 4,
+    POS. %in% c("RP", "SP", "P") ~ 1,
+    POS. %in% c("C", "1B", "2B", "3B", "SS") ~ 2,
+    POS. %in% c("LF", "CF", "RF", "OF") ~ 3,
+    POS. %in% c("DH") ~ 4,
     TRUE ~ NA_integer_
   ))
+Free.Agency.2023 <- Free.Agency.2023 %>% 
+  mutate(dummy_Pos = case_when(
+    POS. %in% c("RP", "SP", "P") ~ 1,
+    POS. %in% c("C", "1B", "2B", "3B", "SS") ~ 2,
+    POS. %in% c("LF", "CF", "RF", "OF") ~ 3,
+    POS. %in% c("DH") ~ 4,
+    TRUE ~ NA_integer_
+  ))
+
 
 #BaseSalaries datasets
 BaseSalaries2022 <- BaseSalaries2022 %>%
@@ -54,6 +63,7 @@ BaseSalaries2022 <- BaseSalaries2022 %>%
     Pos %in% c("DH") ~ 4,
     TRUE ~ NA_integer_
   ))
+
 BaseSalaries2023 <- BaseSalaries2023 %>%
   mutate(dummy_Pos = case_when(
     Pos %in% c("RP", "SP", "P", "RP/CL", "CL", "SP/DH") ~ 1,
@@ -68,6 +78,24 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
 # Contract Length
 # Short(1-2years) = 1, Long(>2years) = 2
 #pulling out contract years and dummying data into 2 categories
+
+Free.Agency.2022 <- Free.Agency.2022 %>% 
+  mutate(dummy_Years = case_when(
+    YRS == 1 ~ 1,
+    YRS >= 2 ~ 2,
+    TRUE ~ NA_integer_
+  ))        
+
+Free.Agency.2023 <- Free.Agency.2023 %>% 
+  mutate(dummy_Years = case_when(
+    YRS == 1 ~ 1,
+    YRS >= 2 ~ 2,
+    TRUE ~ NA_integer_
+  ))        
+
+
+
+
 FreeAgency <- FreeAgency %>%
   mutate(contractYears = as.numeric(str_extract(TERMS, "(?<=\\s)\\d+(?=\\syear)")),
          dummy_contract = case_when(
@@ -76,10 +104,30 @@ FreeAgency <- FreeAgency %>%
            TRUE ~ NA_integer_
          ))
 
-         
+
 
 # Salary Range
-# Low(<$4million) = 1, Median(=$4million) = 2, High(>$4million) = 3
+# Low(<$4million) = 1, Median(=$4million-%5million) = 2, High(>$4million) = 3
+
+Free.Agency.2022$AVG..SALARY <- as.numeric(gsub("[^0-9]", "", as.character(Free.Agency.2022$AVG..SALARY)))
+
+Free.Agency.2022 <- Free.Agency.2022 %>%
+  mutate(contract_value = as.numeric(gsub("\\$|,", "", AVG..SALARY)),
+         dummy_salary = case_when(
+           contract_value < 4e6 ~ 1,    # Low
+           between(contract_value, 4e6, 5e6) ~ 2,   # Median
+           contract_value > 5e6 ~ 3,    # High
+           TRUE ~ NA_integer_
+         ))
+
+Free.Agency.2023 <- Free.Agency.2023 %>%
+  mutate(contract_value = as.numeric(gsub("\\$|,", "", AVG..SALARY)),
+         dummy_salary = case_when(
+           contract_value < 4e6 ~ 1,    # Low
+           between(contract_value, 4e6, 5e6) ~ 2,   # Median
+           contract_value > 5e6 ~ 3,    # High
+           TRUE ~ NA_integer_
+         ))
 
 FreeAgency <- FreeAgency %>%
   mutate(contract_value = str_extract(TERMS, "\\$[0-9.]+ million") %>%
@@ -114,17 +162,35 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
 # Age of Player
 # (<25) = 1, (26-34) = 2, (>35) = 3
 
+Free.Agency.2022 <- Free.Agency.2022 %>% 
+  mutate(dummy_Age = case_when(
+    AGE < 26 ~ 1, 
+    between(AGE, 26, 34) ~ 2, 
+    AGE > 34 ~ 3,
+    TRUE ~ NA_integer_
+  ))
+
+Free.Agency.2023 <- Free.Agency.2023 %>% 
+  mutate(dummy_Age = case_when(
+    AGE < 26 ~ 1, 
+    between(AGE, 26, 34) ~ 2, 
+    AGE > 34 ~ 3,
+    TRUE ~ NA_integer_
+  ))
+
+
+
 BaseSalaries2022$Age <- as.numeric(BaseSalaries2022$Age)
 
 BaseSalaries2022 <- BaseSalaries2022 %>%
   mutate(dummy_age = case_when(
-    Age <= 25 ~ 1,
+    Age < 26 ~ 1,
     between(Age, 26, 34) ~ 2,
-    Age >= 35 ~ 3,
+    Age > 34 ~ 3,
     TRUE ~ NA_integer_
   ))
 
-BaseSalaries2023$Age <- as.numeric(BaseSalaries2023$Age)
+
 
 BaseSalaries2023 <- BaseSalaries2023 %>%
   mutate(dummy_age = case_when(
@@ -135,19 +201,35 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
   ))
 
 # Create a Master Sheet
+master_dataset <- PlayerIDs %>%
+  left_join(BattingDataset2021, by = "PlayerID") %>%
+  left_join(BattingDataset2022, by = "PlayerID") %>%
+  left_join(PitchingDataset2021, by = "PlayerID") %>%
+  left_join(PitchingDataset2022, by = "PlayerID") %>%
+  left_join(BaseSalaries2022, by = "PlayerID") %>%
+  left_join(BaseSalaries2023, by = "PlayerID") %>%
+  left_join(FreeAgency, by = "PlayerID")
+
+write.csv(master_dataset, "master_data.csv", row.names = FALSE)
+
 # Player ID, Name, Age, Position, WAR, ERA, OPS+, Contract Length, Salary1, Salary2
 
-PlayerIDs_Select <- PlayerIDs
-FreeAgency_Select <- FreeAgency[c("PlayerID", "Pos", "contractYears")]
-
-
-
-merged_df <- merge(merge(PlayerIDs, FreeAgency, by = c("PlayerID"), all = TRUE), BaseSalaries2022, by = "PlayerID", all = TRUE)
-merged_df$Position <- coalesce(merged_df$Pos.x, merged_df$Pos.y)
+analysis_dataset <- PlayerIDs %>%
+  left_join(BattingDataset2021, by = "PlayerID") %>%
+  left_join(BattingDataset2022, by = "PlayerID") %>%
+  left_join(PitchingDataset2021, by = "PlayerID") %>%
+  left_join(PitchingDataset2022, by = "PlayerID") %>%
+  left_join(BaseSalaries2022, by = "PlayerID") %>%
+  left_join(BaseSalaries2023, by = "PlayerID") %>%
+  left_join(FreeAgency, by = "PlayerID") %>% 
+  select(PlayerID, Player, Age, Pos, WAR, ERA, OPS.)
 
 
 # Save all Data
+write.csv(PlayerIDs, "PlayerIDs.csv", row.names = FALSE)
 write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
+write.csv(Free.Agency.2022, "Free.Agency.2022.csv", row.names = FALSE)
+write.csv(Free.Agency.2023, "Free.Agency.2023.csv", row.names = FALSE)
 write.csv(combinedBattingDataset, "combinedBattingDataset.csv", row.names = FALSE)
 write.csv(BattingDataset2021, "BattingDataset2021.csv", row.names = FALSE)
 write.csv(BattingDataset2022, "BattingDataset2022.csv", row.names = FALSE)

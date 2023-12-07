@@ -306,11 +306,22 @@ FreeAgency <- FreeAgency %>% rename(Pos = Position)
 
 write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
 
+Free.Agency.2022 <- Free.Agency.2022 %>% rename(Player = PLAYER)
+Free.Agency.2022<- Free.Agency.2022 %>%
+  left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+Free.Agency.2022 <- Free.Agency.2022 %>% select(PlayerID, everything())
+
+write.csv(Free.Agency.2022, "Free.Agency.2022.csv", row.names = FALSE)
+
+Free.Agency.2023 <- Free.Agency.2023 %>% rename(Player = PLAYER)
+Free.Agency.2023<- Free.Agency.2023 %>%
+  left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+Free.Agency.2023 <- Free.Agency.2023 %>% select(PlayerID, everything())
+
+write.csv(Free.Agency.2023, "Free.Agency.2023.csv", row.names = FALSE)
 
 
 
-
- 
 # Editing 2002 Trades
 # combine date
 SeasonTrades2022$Date <- as.Date(paste(SeasonTrades2022$X, SeasonTrades2022$X.1, sep = "-"), format = "%d-%b-%Y")
@@ -552,3 +563,16 @@ SeasonTrades2023 <- apply(SeasonTrades2023, c(1, 2), function(x) ifelse(x == "",
 
 # Save to a CSV file
 write.csv(SeasonTrades2023, "SeasonTrades2023.csv", row.names = FALSE)
+
+
+# Making all PlayerID Columns Numeric
+BaseSalaries2022$PlayerID <- as.numeric(BaseSalaries2022$PlayerID)
+BaseSalaries2023$PlayerID <- as.numeric(BaseSalaries2023$PlayerID)
+BattingDataset2021$PlayerID <- as.numeric(BattingDataset2021$PlayerID)
+BattingDataset2022$PlayerID <- as.numeric(BattingDataset2022$PlayerID)
+combinedBattingDataset$PlayerID <- as.numeric(combinedBattingDataset$PlayerID)
+combinedPitchingDataset$PlayerID <- as.numeric(combinedPitchingDataset$PlayerID)
+FreeAgency$PlayerID <- as.numeric(FreeAgency$PlayerID)
+PitchingDataset2021$PlayerID <- as.numeric(PitchingDataset2021$PlayerID)
+PitchingDataset2022$PlayerID <- as.numeric(PitchingDataset2022$PlayerID)
+PlayerIDs$PlayerID <- as.numeric(PlayerIDs$PlayerID)
