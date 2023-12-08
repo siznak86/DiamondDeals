@@ -77,8 +77,12 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
 
 # Contract Length
 # Short(1-2years) = 1, Long(>2years) = 2
-#dummying data into 2 categories
 
+#converting to numeric
+Free.Agency.2022$YRS <- as.numeric(gsub("[^0-9.]", "", Free.Agency.2022$YRS))
+Free.Agency.2023$YRS <- as.numeric(gsub("[^0-9.]", "", Free.Agency.2023$YRS))
+
+#dummying data into 2 categories
 Free.Agency.2022 <- Free.Agency.2022 %>% 
   mutate(dummy_Years = case_when(
     YRS == 1 ~ 1,
@@ -195,6 +199,25 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
     Age >= 35 ~ 3,
     TRUE ~ NA_integer_
   ))
+
+
+# Cleaning Data by Omitting NA data
+#cleaned_data <- data$column_name[!is.na(data$column_name)]
+Free.Agency.2022_omit <- Free.Agency.2022[!is.na(Free.Agency.2022$AVG..SALARY), ]
+Free.Agency.2022_omit2 <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$WAR), ]
+
+# Create Analysis Tables for just ERA, OPS, and WAR
+Free.Agency.2022.ERA <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$ERA), ]
+Free.Agency.2022.OPS <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$OPS), ]
+Free.Agency.2022.WAR <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$WAR), ]
+
+
+
+
+
+
+
+
 
 # Create a Master Sheet
 master_dataset <- PlayerIDs %>%
