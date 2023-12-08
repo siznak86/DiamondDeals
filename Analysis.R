@@ -100,9 +100,6 @@ ggplot(Free.Agency.2022, aes(x = AGE, y = POS.)) +
 
 
 # Creating a Correlation Matrix
-correlation_matrix_Total <- cor(Free.Agency.2022_omit2[, c("AGE", "YRS", "contract_value", "ERA", "OPS", "WAR", "dummy_Pos" )])
-corrplot(correlation_matrix_Total, method = "color", is.corr = TRUE, addCoef.col = "black")
-# Now do for ERA and OPS
 correlation_matrix_ERA <- cor(Free.Agency.2022.ERA[, c("AGE", "YRS", "contract_value", "ERA", "WAR")])
 corrplot(correlation_matrix_ERA, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black")
 
