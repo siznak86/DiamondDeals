@@ -13,13 +13,11 @@ library(stringi)
 # Player Position
 # Simple
 # Pitcher = 1, Infielder = 2, Outfielder = 3, Designated Hitter = 4
-# Complex
-# Could change P = 1, C = 2, 1B = 3, 2B = 4, 3B = 5, SS = 6, LF = 7, CF = 8, RF = 9, DH = 10, RP = 11
 #player datasets
 #removing special characters
 combinedBattingDataset$CleanPos <- gsub("^[^1-9D]", "", combinedBattingDataset$Pos)
 combinedPitchingDataset$CleanPos <- gsub("^[^1-9D]", "", combinedPitchingDataset$Pos)
-#Dummy coding data
+#Dummy Batting and Pitching for positions
 combinedBattingDataset <- combinedBattingDataset %>% mutate(SimplePos = case_when(
   substr(CleanPos, 1, 1) %in% c("1") ~ 1,
   substr(CleanPos, 1, 1) %in% c("2", "3", "4", "5", "6") ~ 2,
@@ -27,6 +25,7 @@ combinedBattingDataset <- combinedBattingDataset %>% mutate(SimplePos = case_whe
   substr(CleanPos, 1, 1) %in% c("D") ~ 4,
   TRUE ~ NA_integer_
 ))
+
 combinedPitchingDataset <- combinedPitchingDataset %>% mutate(SimplePos = case_when(
   substr(CleanPos, 1, 1) %in% c("1") ~ 1,
   substr(CleanPos, 1, 1) %in% c("2", "3", "4", "5", "6") ~ 2,
@@ -35,7 +34,7 @@ combinedPitchingDataset <- combinedPitchingDataset %>% mutate(SimplePos = case_w
   TRUE ~ NA_integer_
 ))
 
-#free agency dataset
+#free agency dataset dummy code positions
 Free.Agency.2022 <- Free.Agency.2022 %>% 
   mutate(dummy_Pos = case_when(
     POS. %in% c("RP", "SP", "P") ~ 1,
@@ -44,6 +43,7 @@ Free.Agency.2022 <- Free.Agency.2022 %>%
     POS. %in% c("DH") ~ 4,
     TRUE ~ NA_integer_
   ))
+
 Free.Agency.2023 <- Free.Agency.2023 %>% 
   mutate(dummy_Pos = case_when(
     POS. %in% c("RP", "SP", "P") ~ 1,
@@ -77,7 +77,7 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
 
 # Contract Length
 # Short(1-2years) = 1, Long(>2years) = 2
-#pulling out contract years and dummying data into 2 categories
+#dummying data into 2 categories
 
 Free.Agency.2022 <- Free.Agency.2022 %>% 
   mutate(dummy_Years = case_when(
@@ -94,8 +94,7 @@ Free.Agency.2023 <- Free.Agency.2023 %>%
   ))        
 
 
-
-
+#pulling out contract years and dummying data into 2 categories
 FreeAgency <- FreeAgency %>%
   mutate(contractYears = as.numeric(str_extract(TERMS, "(?<=\\s)\\d+(?=\\syear)")),
          dummy_contract = case_when(
@@ -109,8 +108,7 @@ FreeAgency <- FreeAgency %>%
 # Salary Range
 # Low(<$4million) = 1, Median(=$4million-%5million) = 2, High(>$4million) = 3
 
-Free.Agency.2022$AVG..SALARY <- as.numeric(gsub("[^0-9]", "", as.character(Free.Agency.2022$AVG..SALARY)))
-
+# Changing column to Numeric and separating into 3 dummy values
 Free.Agency.2022 <- Free.Agency.2022 %>%
   mutate(contract_value = as.numeric(gsub("\\$|,", "", AVG..SALARY)),
          dummy_salary = case_when(
@@ -119,7 +117,7 @@ Free.Agency.2022 <- Free.Agency.2022 %>%
            contract_value > 5e6 ~ 3,    # High
            TRUE ~ NA_integer_
          ))
-
+# Changing column to Numeric and separating into 3 dummy values
 Free.Agency.2023 <- Free.Agency.2023 %>%
   mutate(contract_value = as.numeric(gsub("\\$|,", "", AVG..SALARY)),
          dummy_salary = case_when(
@@ -128,7 +126,7 @@ Free.Agency.2023 <- Free.Agency.2023 %>%
            contract_value > 5e6 ~ 3,    # High
            TRUE ~ NA_integer_
          ))
-
+# Changing column to Numeric and separating into 3 dummy values
 FreeAgency <- FreeAgency %>%
   mutate(contract_value = str_extract(TERMS, "\\$[0-9.]+ million") %>%
            gsub("\\$| million", "", .) %>%
@@ -139,7 +137,7 @@ FreeAgency <- FreeAgency %>%
            contract_value > 4 ~ 3,    # High
            TRUE ~ NA_integer_
          ))
-
+# Changing column to Numeric and separating into 3 dummy values
 BaseSalaries2022 <- BaseSalaries2022 %>%
   mutate(contract_value = as.numeric(gsub("\\$|,", "", BaseSalary)),
          dummy_salary = case_when(
@@ -148,7 +146,7 @@ BaseSalaries2022 <- BaseSalaries2022 %>%
            contract_value > 4e6 ~ 3,    # High
            TRUE ~ NA_integer_
          ))
-
+# Changing column to Numeric and separating into 3 dummy values
 BaseSalaries2023 <- BaseSalaries2023 %>%
   mutate(contract_value = as.numeric(gsub("\\$|,", "", BaseSalary)),
          dummy_salary = case_when(
@@ -161,7 +159,7 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
 
 # Age of Player
 # (<25) = 1, (26-34) = 2, (>35) = 3
-
+# Dummy Coding into 3 variables
 Free.Agency.2022 <- Free.Agency.2022 %>% 
   mutate(dummy_Age = case_when(
     AGE < 26 ~ 1, 
@@ -169,7 +167,7 @@ Free.Agency.2022 <- Free.Agency.2022 %>%
     AGE > 34 ~ 3,
     TRUE ~ NA_integer_
   ))
-
+# Dummy Coding into 3 variables
 Free.Agency.2023 <- Free.Agency.2023 %>% 
   mutate(dummy_Age = case_when(
     AGE < 26 ~ 1, 
@@ -178,10 +176,9 @@ Free.Agency.2023 <- Free.Agency.2023 %>%
     TRUE ~ NA_integer_
   ))
 
-
-
+# change column to numeric
 BaseSalaries2022$Age <- as.numeric(BaseSalaries2022$Age)
-
+# Dummy Coding into 3 variables
 BaseSalaries2022 <- BaseSalaries2022 %>%
   mutate(dummy_age = case_when(
     Age < 26 ~ 1,
@@ -190,8 +187,7 @@ BaseSalaries2022 <- BaseSalaries2022 %>%
     TRUE ~ NA_integer_
   ))
 
-
-
+# Dummy Coding into 3 variables
 BaseSalaries2023 <- BaseSalaries2023 %>%
   mutate(dummy_age = case_when(
     Age <= 25 ~ 1,

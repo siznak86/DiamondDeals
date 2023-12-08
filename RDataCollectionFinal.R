@@ -97,27 +97,36 @@ replace_special_chars <- function(text) {
   cleaned_text <- iconv(text, to = "ASCII//TRANSLIT")
   return(cleaned_text)
 }
+#Running replace special characters 
 Batting_cleaned <- combinedBattingDataset %>%
   mutate(CleanedPlayer = replace_special_chars(Player))
-
+#merging column
 Batting_cleaned <- Batting_cleaned %>% mutate(Player = CleanedPlayer)
-
+# deleting unused columns
 combinedBattingDataset_cleaned <- Batting_cleaned %>% select(-isNew, -CleanedPlayer)
+# saving
 write.csv(combinedBattingDataset_cleaned, "combinedBattingDataset.csv", row.names = FALSE)
 
+# replacing special characters
 PlayerID_cleaned <- PlayerIDs %>%
   mutate(CleanedPlayer = replace_special_chars(Player))
-
+#merging columns
 PlayerID_cleaned <- PlayerID_cleaned %>% mutate(Player = CleanedPlayer)
-
+# deleting column
 PlayerIDs <- PlayerID_cleaned %>% select(-CleanedPlayer)
+# saving
 write.csv(PlayerIDs, "PlayerIDs.csv", row.names = FALSE)
 
 # create 2021 and 2022 datasets
+# filtering by seasons
 BattingDataset2021 <- filter(combinedBattingDataset, Season == 2021)
 BattingDataset2022 <- filter(combinedBattingDataset, Season == 2022)
+#saving
 write.csv(BattingDataset2021, "BattingDataset2021.csv", row.names = FALSE)
 write.csv(BattingDataset2022, "BattingDataset2022.csv", row.names = FALSE)
+
+
+
 
 #Collecting Data on Pitching Years of 2021 and 2022
 # List of URLs
@@ -194,19 +203,25 @@ write.csv(combinedPitchingDataset, "combinedPitchingDataset.csv", row.names = FA
 #replacing names with cleaned names
 cleanedPitching <- combinedPitchingDataset %>%
   left_join(PlayerIDs,  by = "PlayerID") 
-
+# merging columns
 cleanedPitching <- cleanedPitching %>% mutate(Player.x = Player.y)
-
+# deleting column
 combinedPitchingDataset_cleaned <- cleanedPitching %>% select(-Player.y)
+# renaming column
 combinedPitchingDataset_cleaned <- combinedPitchingDataset_cleaned %>% rename(Player = Player.x)
-
+# saving
 write.csv(combinedPitchingDataset_cleaned, "combinedPitchingDataset.csv", row.names = FALSE)
 
 # create 2021 and 2022 datasets
+#filtering data by season
 PitchingDataset2021 <- filter(combinedPitchingDataset, Season == 2021)
 PitchingDataset2022 <- filter(combinedPitchingDataset, Season == 2022)
+# saving
 write.csv(PitchingDataset2021, "PitchingDataset2021.csv", row.names = FALSE)
 write.csv(PitchingDataset2022, "PitchingDataset2022.csv", row.names = FALSE)
+
+
+
 
 
 # Editing Base Salaries 2022
@@ -221,29 +236,30 @@ BaseSalaries2022 <- BaseSalaries2022 %>% select(PlayerID, everything())
 # Save to a CSV file
 write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
 
-
 # Cleaning Names
 replace_special_chars <- function(text) {
   # Replace special characters with their Latin equivalents
   cleaned_text <- iconv(text, to = "ASCII//TRANSLIT")
   return(cleaned_text)
 }
+#running replace
 BaseSalaries2022_cleaned <- BaseSalaries2022 %>%
   mutate(CleanedPlayer = replace_special_chars(Player))
-
+#merging columns
 BaseSalaries2022_cleaned <- BaseSalaries2022_cleaned %>% mutate(Player = CleanedPlayer)
-
+#deleting columns
 BaseSalaries2022 <- BaseSalaries2022_cleaned %>% select(-CleanedPlayer)
-# adding Player ID
-#Joining PlayerId to Pitching
+
+#Joining PlayerId
 BaseSalaries2022 <- BaseSalaries2022 %>%
   left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
-
+#saving
 write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
 # Edit names and Ids in excel
+# rename columns
 names(BaseSalaries2022) <- c("PlayerID", "Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
+#deleting first row
 BaseSalaries2022 <- BaseSalaries2022[-1,]
-
 
 
 # Editing Base Salaries 2023
@@ -255,31 +271,39 @@ BaseSalaries2023 <- BaseSalaries2023[-1,]
 BaseSalaries2023 <- apply(BaseSalaries2023, c(1, 2), function(x) ifelse(x == "", NA, x))
 # Save to a CSV file
 write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
- 
+# running replace 
 BaseSalaries2023_cleaned <- BaseSalaries2023 %>%
   mutate(CleanedPlayer = replace_special_chars(Player))
-
+#merging data
 BaseSalaries2023_cleaned <- BaseSalaries2023_cleaned %>% mutate(Player = CleanedPlayer)
-
+#deleting column
 BaseSalaries2023 <- BaseSalaries2023_cleaned %>% select(-CleanedPlayer)
-
+# joinning playerid
 BaseSalaries2023 <- BaseSalaries2023 %>%
   left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
-
+# moving playerid to first column
 BaseSalaries2023 <- BaseSalaries2023 %>% select(PlayerID, everything())
-
+# saving
 write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
-
+#renaming columns
 names(BaseSalaries2023) <- c("PlayerID", "Player", "Pos", "Age", "Bats", "Throws", "BaseSalary", "Team")
+# deleting first row
 BaseSalaries2023 <- BaseSalaries2023[-1,]
+# joining player id
 BaseSalaries2023 <- BaseSalaries2023 %>%
   left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+#merging and deleting columns
 BaseSalaries2023 <- BaseSalaries2023 %>% mutate(PlayerID.x = PlayerID.y)
 BaseSalaries2023 <- BaseSalaries2023 %>% select(-PlayerID.y)
 BaseSalaries2023 <- BaseSalaries2023 %>% mutate(PlayerID = PlayerID.x)
 BaseSalaries2023 <- BaseSalaries2023 %>% select(-PlayerID.x)
+#moving playerid to first column
 BaseSalaries2023 <- BaseSalaries2023 %>% select(PlayerID, everything())
+#saving
 write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
+
+
+
  
 # Editing Free Agency
 # Splitting Name and Date
@@ -294,30 +318,38 @@ FreeAgency <- FreeAgency %>% select(-Name2)
 # Save to a CSV file
 write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
 
-# add playerid
-FreeAgency <- FreeAgency %>% rename(Player = Name)
 
+# renaming column
+FreeAgency <- FreeAgency %>% rename(Player = Name)
+# add playerid
 FreeAgency <- FreeAgency %>%
   left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+# moving to first column
 FreeAgency <- FreeAgency %>% select(PlayerID, everything())
 
 #Changing Position to Pos
 FreeAgency <- FreeAgency %>% rename(Pos = Position)
-
+# saving
 write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
 
+# Adding playerid to better free agent dataset
+#renaming column
 Free.Agency.2022 <- Free.Agency.2022 %>% rename(Player = PLAYER)
+#joining playerid
 Free.Agency.2022<- Free.Agency.2022 %>%
   left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+#move to first column
 Free.Agency.2022 <- Free.Agency.2022 %>% select(PlayerID, everything())
-
+#save
 write.csv(Free.Agency.2022, "Free.Agency.2022.csv", row.names = FALSE)
-
+#renaming column
 Free.Agency.2023 <- Free.Agency.2023 %>% rename(Player = PLAYER)
+#joining player id
 Free.Agency.2023<- Free.Agency.2023 %>%
   left_join(PlayerIDs %>% select(PlayerID, Player), by = "Player")
+#moving to first column
 Free.Agency.2023 <- Free.Agency.2023 %>% select(PlayerID, everything())
-
+# saving
 write.csv(Free.Agency.2023, "Free.Agency.2023.csv", row.names = FALSE)
 
 
@@ -419,7 +451,9 @@ SeasonTrades2022$Team2Cash6 <- gsub("[^0-9]", "", SeasonTrades2022$Team2Cash6)
 # converting Team*Cash* to numeric currency
 # Convert the character column to numeric (remove "$" and ",")
 SeasonTrades2022$Team1Cash1 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash1))
+
 # Format the numeric column as currency
+# Team 1
 SeasonTrades2022$Team1Cash1 <- currency(SeasonTrades2022$Team1Cash1)
 
 SeasonTrades2022$Team1Cash2 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash2))
@@ -436,7 +470,7 @@ SeasonTrades2022$Team1Cash5 <- currency(SeasonTrades2022$Team1Cash5)
 
 SeasonTrades2022$Team1Cash6 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team1Cash6))
 SeasonTrades2022$Team1Cash6 <- currency(SeasonTrades2022$Team1Cash6)
-
+# Format the numeric column as currency
 # Team 2
 SeasonTrades2022$Team2Cash1 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2022$Team2Cash1))
 SeasonTrades2022$Team2Cash1 <- currency(SeasonTrades2022$Team2Cash1)
@@ -531,6 +565,7 @@ SeasonTrades2023$Team2Cash3 <- gsub("[^0-9]", "", SeasonTrades2023$Team2Cash3)
 # Convert the character column to numeric (remove "$" and ",")
 SeasonTrades2023$Team1Cash1 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash1))
 # Format the numeric column as currency
+# Team 1
 SeasonTrades2023$Team1Cash1 <- currency(SeasonTrades2023$Team1Cash1)
 
 SeasonTrades2023$Team1Cash2 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash2))
@@ -547,7 +582,7 @@ SeasonTrades2023$Team1Cash5 <- currency(SeasonTrades2023$Team1Cash5)
 
 SeasonTrades2023$Team1Cash6 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team1Cash6))
 SeasonTrades2023$Team1Cash6 <- currency(SeasonTrades2023$Team1Cash6)
-
+# Format the numeric column as currency
 # Team 2
 SeasonTrades2023$Team2Cash1 <- as.numeric(gsub("[^0-9.]", "", SeasonTrades2023$Team2Cash1))
 SeasonTrades2023$Team2Cash1 <- currency(SeasonTrades2023$Team2Cash1)
