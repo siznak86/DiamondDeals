@@ -1,0 +1,36 @@
+Question: What is the value of one player statistically compared to prospects in trades made in MLB?
+
+Independent Variable(s): The characteristics and performance metrics of the player being traded, including:
+
+Player's batting average
+Player's on-base percentage
+Player's slugging percentage (for hitters)
+Player's ERA, strikeouts, and walks (for pitchers)
+Player's WAR (Wins Above Replacement)
+Contract status of the player
+Age of the player
+Injury history of the player
+Dependent Variable: The value of the player in the trade. This could be determined by factors such as:
+
+The perceived overall contribution of the player to a team.
+The specific needs of the teams involved in the trade.
+The potential of prospects (young players in the minor leagues) being traded for.
+
+Question: What is the money value vs. their statistics of a player in signing a free agent?
+
+Independent Variable(s): The characteristics and statistical performance of the free agent, including:
+
+Player's batting average
+Player's on-base percentage
+Player's slugging percentage (for hitters)
+Player's ERA, strikeouts, and walks (for pitchers)
+Player's WAR (Wins Above Replacement)
+Age of the player
+Position played
+Injury history of the player
+Dependent Variable: The financial terms of the free agent's contract. This could be influenced by factors such as:
+
+The player's statistical performance.
+The player's overall market demand.
+The team's budget and financial considerations.
+The duration of the contract.
