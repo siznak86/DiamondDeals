@@ -1,5 +1,6 @@
 # Adding data and some light wrangling
 
+#install.packages("stringi")
 library(rvest)
 library(dplyr)
 library(tidyr)
