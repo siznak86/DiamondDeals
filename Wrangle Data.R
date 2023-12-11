@@ -44,7 +44,38 @@ Free.Agency.2022 <- Free.Agency.2022 %>%
     TRUE ~ NA_integer_
   ))
 
+Free.Agency.2022 <- Free.Agency.2022 %>% 
+  mutate(PosNumber = case_when(
+    POS. %in% c("RP", "SP", "P") ~ 1,
+    POS. %in% c("C") ~ 2,
+    POS. %in% c("1B") ~ 3,
+    POS. %in% c("2B") ~ 4,
+    POS. %in% c("3B") ~ 5,
+    POS. %in% c("SS") ~ 6,
+    POS. %in% c("LF") ~ 7,
+    POS. %in% c("CF") ~ 8,
+    POS. %in% c("RF") ~ 9,
+    POS. %in% c("DH") ~ 10,
+    TRUE ~ NA_integer_
+  ))
+
 Free.Agency.2023 <- Free.Agency.2023 %>% 
+  mutate(PosNumber = case_when(
+    POS. %in% c("RP", "SP", "P") ~ 1,
+    POS. %in% c("C") ~ 2,
+    POS. %in% c("1B") ~ 3,
+    POS. %in% c("2B") ~ 4,
+    POS. %in% c("3B") ~ 5,
+    POS. %in% c("SS") ~ 6,
+    POS. %in% c("LF") ~ 7,
+    POS. %in% c("CF") ~ 8,
+    POS. %in% c("RF") ~ 9,
+    POS. %in% c("DH") ~ 10,
+    TRUE ~ NA_integer_
+  ))
+
+# Splitting dummy code into position numbers
+Free.Agency.2022 <- Free.Agency.2022 %>% 
   mutate(dummy_Pos = case_when(
     POS. %in% c("RP", "SP", "P") ~ 1,
     POS. %in% c("C", "1B", "2B", "3B", "SS") ~ 2,
@@ -52,6 +83,8 @@ Free.Agency.2023 <- Free.Agency.2023 %>%
     POS. %in% c("DH") ~ 4,
     TRUE ~ NA_integer_
   ))
+
+
 
 
 #BaseSalaries datasets
@@ -206,12 +239,19 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
 Free.Agency.2022_omit <- Free.Agency.2022[!is.na(Free.Agency.2022$AVG..SALARY), ]
 Free.Agency.2022_omit2 <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$WAR), ]
 
+Free.Agency.2023_omit <- Free.Agency.2023[!is.na(Free.Agency.2023$AVG..SALARY), ]
+Free.Agency.2023_omit2 <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$WAR), ]
+
+
+
 # Create Analysis Tables for just ERA, OPS, and WAR
 Free.Agency.2022.ERA <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$ERA), ]
 Free.Agency.2022.OPS <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$OPS), ]
 Free.Agency.2022.WAR <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$WAR), ]
 
-
+Free.Agency.2023.ERA <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$ERA), ]
+Free.Agency.2023.OPS <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$OPS), ]
+Free.Agency.2023.WAR <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$WAR), ]
 
 
 

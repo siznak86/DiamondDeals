@@ -100,11 +100,25 @@ ggplot(Free.Agency.2022, aes(x = AGE, y = POS.)) +
 
 
 # Creating a Correlation Matrix
-correlation_matrix_ERA <- cor(Free.Agency.2022.ERA[, c("AGE", "YRS", "contract_value", "ERA", "WAR")])
-corrplot(correlation_matrix_ERA, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black")
+#columns pulled out with numeric values
+#correlation_matrix <- cor(Free.Agency.2022[, c("AGE", "dummy_Years", "PosNumber", "contract_value", "H", "RBI", "HR", "AVG", "OPS", "IP", "ERA", "WHIP", "W", "SV", "WAR")])
+#corrplot(correlation_matrix, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black")
 
-correlation_matrix_OPS <- cor(Free.Agency.2022.OPS[, c("AGE", "YRS", "contract_value", "OPS", "WAR", "dummy_Pos")])
-corrplot(correlation_matrix_OPS, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black")
+correlation_matrix_ERA2022 <- cor(Free.Agency.2022.ERA[, c("AGE", "YRS", "contract_value", "ERA", "IP", "WHIP","W", "SV", "WAR","PosNumber")])
+corrplot(correlation_matrix_ERA2022, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - ERA 2022")
 
-correlation_matrix_WAR <- cor(Free.Agency.2022.WAR[, c("AGE", "YRS", "contract_value", "WAR", "dummy_Pos")])
-corrplot(correlation_matrix_WAR, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black")
+correlation_matrix_OPS2022 <- cor(Free.Agency.2022.OPS[, c("AGE", "YRS", "contract_value", "OPS", "WAR", "dummy_Pos", "H", "RBI", "HR", "AVG","PosNumber")])
+corrplot(correlation_matrix_OPS, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - OPS 2022")
+
+correlation_matrix_WAR2022 <- cor(Free.Agency.2022.WAR[, c("AGE", "YRS", "contract_value", "WAR", "dummy_Pos","PosNumber")])
+corrplot(correlation_matrix_WAR2022, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black")
+
+correlation_matrix_ERA2023 <- cor(Free.Agency.2023.ERA[, c("AGE", "YRS", "contract_value", "ERA", "IP", "WHIP","W", "SV", "WAR","PosNumber")])
+corrplot(correlation_matrix_ERA2023, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - ERA 2023")
+
+correlation_matrix_OPS2023 <- cor(Free.Agency.2023.OPS[, c("AGE", "YRS", "contract_value", "OPS", "WAR", "dummy_Pos", "H", "RBI", "HR", "AVG","PosNumber")])
+corrplot(correlation_matrix_OPS2023, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - OPS 2023")
+
+correlation_matrix_WAR2023 <- cor(Free.Agency.2023.WAR[, c("AGE", "YRS", "contract_value", "WAR", "dummy_Pos","PosNumber")])
+corrplot(correlation_matrix_WAR2023, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black")
+
