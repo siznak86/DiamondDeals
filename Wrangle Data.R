@@ -246,8 +246,24 @@ Free.Agency.2023_omit2 <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$WAR
 
 # Create Analysis Tables for just ERA, OPS, and WAR
 Free.Agency.2022.ERA <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$ERA), ]
+# removing non essential data
+Free.Agency.2022.ERA <- Free.Agency.2022.ERA %>% select(-H,-RBI, -HR, -AVG, -OPS)
+  
 Free.Agency.2022.OPS <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$OPS), ]
+# removing pitchers
+# Column and value to remove
+column_to_check <- "PosNumber"
+value_to_remove <- 1
+# Identify rows where the specified value is present in the specified column
+rows_to_remove <- Free.Agency.2022.OPS[, column_to_check] == value_to_remove
+# Subset the data frame to keep only rows without the specified value
+Free.Agency.2022.OPS <- Free.Agency.2022.OPS[!rows_to_remove, ]
+Free.Agency.2022.OPS <- Free.Agency.2022.OPS %>% select(-ERA, -IP, -WHIP, -W, -SV)
+Free.Agency.2022.OPS <- Free.Agency.2022.OPS[!is.na(Free.Agency.2022.OPS$OPS), ]
+
+
 Free.Agency.2022.WAR <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$WAR), ]
+
 
 Free.Agency.2023.ERA <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$ERA), ]
 Free.Agency.2023.OPS <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$OPS), ]
