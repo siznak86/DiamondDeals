@@ -1,0 +1,14 @@
+Wrangling
+Change all Numbers to Numeric
+Change NA to 0 where applicable
+Create dummycode for all string data
+Create dummycode for all other necessary data
+Split Data into batting and pitching
+
+Export Graphs
+
+Combining Years to see if Correltaions get stronger
+
+
+Clean Code
+Comment Code

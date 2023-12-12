@@ -234,45 +234,81 @@ BaseSalaries2023 <- BaseSalaries2023 %>%
   ))
 
 
-# Cleaning Data by Omitting NA data
+# Cleaning Data by Omitting NA data 2022
 #cleaned_data <- data$column_name[!is.na(data$column_name)]
+#Removing NA Salary
 Free.Agency.2022_omit <- Free.Agency.2022[!is.na(Free.Agency.2022$AVG..SALARY), ]
-Free.Agency.2022_omit2 <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$WAR), ]
+#separating out just pitching positions
+Free.Agency.2022_omit_ERA <- Free.Agency.2022_omit[Free.Agency.2022_omit$dummy_Pos == 1, ] 
+#separating just pitching stats
+Free.Agency.2022_omit_ERA <- Free.Agency.2022_omit_ERA %>% select(-H, -RBI, -HR, -AVG, -OPS)
+#removing NA War
+Free.Agency.2022_omit_ERA <- Free.Agency.2022_omit_ERA[!is.na(Free.Agency.2022_omit_ERA$WAR), ]
+#change all NA to 0
+Free.Agency.2022_omit_ERA <- replace(Free.Agency.2022_omit_ERA, is.na(Free.Agency.2022_omit_ERA), 0)
 
-Free.Agency.2023_omit <- Free.Agency.2023[!is.na(Free.Agency.2023$AVG..SALARY), ]
-Free.Agency.2023_omit2 <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$WAR), ]
 
-
-
-# Create Analysis Tables for just ERA, OPS, and WAR
-Free.Agency.2022.ERA <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$ERA), ]
-# removing non essential data
-Free.Agency.2022.ERA <- Free.Agency.2022.ERA %>% select(-H,-RBI, -HR, -AVG, -OPS)
-  
-Free.Agency.2022.OPS <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$OPS), ]
+#separating out pitching positions
 # removing pitchers
 # Column and value to remove
-column_to_check <- "PosNumber"
+column_to_check <- "dummy_Pos"
 value_to_remove <- 1
 # Identify rows where the specified value is present in the specified column
-rows_to_remove <- Free.Agency.2022.OPS[, column_to_check] == value_to_remove
-# Subset the data frame to keep only rows without the specified value
-Free.Agency.2022.OPS <- Free.Agency.2022.OPS[!rows_to_remove, ]
-Free.Agency.2022.OPS <- Free.Agency.2022.OPS %>% select(-ERA, -IP, -WHIP, -W, -SV)
-Free.Agency.2022.OPS <- Free.Agency.2022.OPS[!is.na(Free.Agency.2022.OPS$OPS), ]
-
-
-Free.Agency.2022.WAR <- Free.Agency.2022_omit[!is.na(Free.Agency.2022_omit$WAR), ]
-
-
-Free.Agency.2023.ERA <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$ERA), ]
-Free.Agency.2023.OPS <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$OPS), ]
-Free.Agency.2023.WAR <- Free.Agency.2023_omit[!is.na(Free.Agency.2023_omit$WAR), ]
+rows_to_remove <- Free.Agency.2022_omit[, column_to_check] == value_to_remove
+Free.Agency.2022_omit_OPS <- Free.Agency.2022_omit[!rows_to_remove, ]
+#separating just batting stats
+Free.Agency.2022_omit_OPS <- Free.Agency.2022_omit_OPS %>% select(-IP, -ERA, -WHIP, -W, -SV)
+#changing NA to 2 for missing dummy years 
+Free.Agency.2022_omit_OPS$dummy_Years <- replace(Free.Agency.2022_omit_OPS$dummy_Years, is.na(Free.Agency.2022_omit_OPS$dummy_Years), 2)
+#change all NA to 0
+Free.Agency.2022_omit_OPS <- replace(Free.Agency.2022_omit_OPS, is.na(Free.Agency.2022_omit_OPS), 0)
 
 
 
+# Cleaning Data by Omitting NA data 2023
+#cleaned_data <- data$column_name[!is.na(data$column_name)]
+#Removing NA Salary
+Free.Agency.2023_omit <- Free.Agency.2023[!is.na(Free.Agency.2023$dummy_salary), ]
+#separating out just pitching positions
+Free.Agency.2023_omit_ERA <- Free.Agency.2023_omit[Free.Agency.2023_omit$dummy_Pos == 1, ] 
+#separating just pitching stats
+Free.Agency.2023_omit_ERA <- Free.Agency.2023_omit_ERA %>% select(-H, -RBI, -HR, -AVG, -OPS)
+#removing NA War
+Free.Agency.2023_omit_ERA <- Free.Agency.2023_omit_ERA[!is.na(Free.Agency.2023_omit_ERA$WAR), ]
+#change all NA to 0
+Free.Agency.2023_omit_ERA <- replace(Free.Agency.2023_omit_ERA, is.na(Free.Agency.2023_omit_ERA), 0)
 
 
+#separating out pitching positions
+# removing pitchers
+# Column and value to remove
+column_to_check <- "dummy_Pos"
+value_to_remove <- 1
+# Identify rows where the specified value is present in the specified column
+rows_to_remove <- Free.Agency.2023_omit[, column_to_check] == value_to_remove
+Free.Agency.2023_omit_OPS <- Free.Agency.2023_omit[!rows_to_remove, ]
+#separating just batting stats
+Free.Agency.2023_omit_OPS <- Free.Agency.2023_omit_OPS %>% select(-IP, -ERA, -WHIP, -W, -SV)
+#removing NA War
+Free.Agency.2023_omit_OPS <- Free.Agency.2023_omit_OPS[!is.na(Free.Agency.2023_omit_OPS$WAR), ]
+#changing NA to 2 for missing dummy years 
+Free.Agency.2023_omit_OPS$dummy_Years <- replace(Free.Agency.2023_omit_OPS$dummy_Years, is.na(Free.Agency.2023_omit_OPS$dummy_Years), 2)
+#change all NA to 0
+Free.Agency.2023_omit_OPS <- replace(Free.Agency.2023_omit_OPS, is.na(Free.Agency.2023_omit_OPS), 0)
+
+
+
+
+# Renaming Data Sets
+Free.Agency.2022.ERA <- Free.Agency.2022_omit_ERA
+Free.Agency.2022.OPS <- Free.Agency.2022_omit_OPS
+Free.Agency.2023.ERA <- Free.Agency.2023_omit_ERA
+Free.Agency.2023.OPS <- Free.Agency.2023_omit_OPS
+
+
+# Combining ERA and OPS for more data to run in analysis
+Free.Agency.ERA <- rbind(Free.Agency.2022.ERA, Free.Agency.2023.ERA)
+Free.Agency.OPS <- rbind(Free.Agency.2022.OPS, Free.Agency.2023.OPS)
 
 
 # Create a Master Sheet
@@ -298,21 +334,3 @@ analysis_dataset <- PlayerIDs %>%
   left_join(BaseSalaries2023, by = "PlayerID") %>%
   left_join(FreeAgency, by = "PlayerID") %>% 
   select(PlayerID, Player, Age, Pos, WAR, ERA, OPS.)
-
-
-# Save all Data
-write.csv(PlayerIDs, "PlayerIDs.csv", row.names = FALSE)
-write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
-write.csv(Free.Agency.2022, "Free.Agency.2022.csv", row.names = FALSE)
-write.csv(Free.Agency.2023, "Free.Agency.2023.csv", row.names = FALSE)
-write.csv(combinedBattingDataset, "combinedBattingDataset.csv", row.names = FALSE)
-write.csv(BattingDataset2021, "BattingDataset2021.csv", row.names = FALSE)
-write.csv(BattingDataset2022, "BattingDataset2022.csv", row.names = FALSE)
-write.csv(combinedPitchingDataset, "combinedPitchingDataset.csv", row.names = FALSE)
-write.csv(PitchingDataset2021, "PitchingDataset2021.csv", row.names = FALSE)
-write.csv(PitchingDataset2022, "PitchingDataset2022.csv", row.names = FALSE)
-write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
-write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
-write.csv(Free.Agency.2022.ERA, "Free.Agency.2022.ERA.csv", row.names = FALSE)
-write.csv(Free.Agency.2022.OPS, "Free.Agency.2022.OPS.csv", row.names = FALSE)
-write.csv(Free.Agency.2022.WAR, "Free.Agency.2022.WAR.csv", row.names = FALSE)

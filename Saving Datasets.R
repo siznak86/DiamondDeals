@@ -1,0 +1,22 @@
+
+
+# Save all Data
+write.csv(PlayerIDs, "PlayerIDs.csv", row.names = FALSE)
+write.csv(FreeAgency, "FreeAgency.csv", row.names = FALSE)
+write.csv(Free.Agency.2022, "Free.Agency.2022.csv", row.names = FALSE)
+write.csv(Free.Agency.2023, "Free.Agency.2023.csv", row.names = FALSE)
+write.csv(combinedBattingDataset, "combinedBattingDataset.csv", row.names = FALSE)
+write.csv(BattingDataset2021, "BattingDataset2021.csv", row.names = FALSE)
+write.csv(BattingDataset2022, "BattingDataset2022.csv", row.names = FALSE)
+write.csv(combinedPitchingDataset, "combinedPitchingDataset.csv", row.names = FALSE)
+write.csv(PitchingDataset2021, "PitchingDataset2021.csv", row.names = FALSE)
+write.csv(PitchingDataset2022, "PitchingDataset2022.csv", row.names = FALSE)
+write.csv(BaseSalaries2022, "BaseSalaries2022.csv", row.names = FALSE)
+write.csv(BaseSalaries2023, "BaseSalaries2023.csv", row.names = FALSE)
+write.csv(Free.Agency.2022.ERA, "Free.Agency.2022.ERA.csv", row.names = FALSE)
+write.csv(Free.Agency.2022.OPS, "Free.Agency.2022.OPS.csv", row.names = FALSE)
+write.csv(Free.Agency.2022.WAR, "Free.Agency.2022.WAR.csv", row.names = FALSE)
+write.csv(Free.Agency.2023.ERA, "Free.Agency.2023.ERA.csv", row.names = FALSE)
+write.csv(Free.Agency.2023.OPS, "Free.Agency.2023.OPS.csv", row.names = FALSE)
+write.csv(Free.Agency.ERA, "Free.Agency.ERA.csv", row.names = FALSE)
+write.csv(Free.Agency.OPS, "Free.Agency.OPS.csv", row.names = FALSE)
