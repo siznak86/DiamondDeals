@@ -35,36 +35,48 @@ summary(step_model_WAR)
 # Dependent Variables y (Salary, Position, Contract Length)
 
 # Scatter Plot ERA vs. Salary
-ggplot(Free.Agency.2022, aes(x = ERA, y = contract_value)) + 
+ggplot(Free.Agency.ERA, aes(x = ERA, y = contract_value)) + 
   geom_point(color = "blue", size = 3) + 
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(title = "ERA V. Free Agent Salary", x = "ERA", y = "Salary")
 # Scatter Plot ERA vs. Contract Length
-ggplot(Free.Agency.2022, aes(x = ERA, y = YRS)) + 
+ggplot(Free.Agency.ERA, aes(x = ERA, y = YRS)) + 
   geom_point(color = "blue", size = 3) + 
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(title = "ERA V. Free Agent Years", x = "ERA", y = "Years")
 # Scatter Plot ERA vs. Position
-ggplot(Free.Agency.2022, aes(x = ERA, y = POS.)) + 
+ggplot(Free.Agency.ERA, aes(x = ERA, y = POS.)) + 
   geom_point(color = "blue", size = 3) + 
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(title = "ERA V. Free Agent Position", x = "ERA", y = "Position")
+# Scatter Plot ERA vs. Position
+ggplot(Free.Agency.ERA, aes(x = ERA, y = WAR)) + 
+  geom_point(color = "blue", size = 3) + 
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "ERA V. Free Agent WAR", x = "ERA", y = "WAR")
+
 
 # Scatter Plot OPS vs. Salary
-ggplot(Free.Agency.2022, aes(x = OPS, y = contract_value)) + 
+ggplot(Free.Agency.OPS, aes(x = OPS, y = contract_value)) + 
   geom_point(color = "blue", size = 3) + 
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(title = "OPS V. Free Agent Salary", x = "OPS", y = "Salary")
 # Scatter Plot OPS vs. Contract Length
-ggplot(Free.Agency.2022, aes(x = OPS, y = YRS)) + 
+ggplot(Free.Agency.OPS, aes(x = OPS, y = YRS)) + 
   geom_point(color = "blue", size = 3) + 
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(title = "OPS V. Free Agent Years", x = "OPS", y = "Years")
 # Scatter Plot OPS vs. Position
-ggplot(Free.Agency.2022, aes(x = OPS, y = POS.)) + 
+ggplot(Free.Agency.OPS, aes(x = OPS, y = POS.)) + 
   geom_point(color = "blue", size = 3) +
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(title = "OPS V. Free Agent Position", x = "OPS", y = "Position")
+# Scatter Plot OPS vs. WAR
+ggplot(Free.Agency.OPS, aes(x = OPS, y = WAR)) + 
+  geom_point(color = "blue", size = 3) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "OPS V. Free Agent WAR", x = "OPS", y = "WAR")
+
 
 # Scatter Plot WAR vs. Salary
 ggplot(Free.Agency.2022, aes(x = WAR, y = contract_value)) + 
@@ -116,4 +128,9 @@ corrplot(correlation_matrix_ERA2023, method = "color", type = "full", tl.col = "
 #OPS 2023
 correlation_matrix_OPS2023 <- cor(Free.Agency.2023.OPS[, c("AGE", "YRS", "contract_value", "OPS", "WAR", "dummy_Pos", "H", "RBI", "HR", "AVG","PosNumber")])
 corrplot(correlation_matrix_OPS2023, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - OPS 2023")
-
+#ERA Total
+correlation_matrix_ERA <- cor(Free.Agency.ERA[, c("AGE", "YRS", "contract_value", "ERA", "IP", "WHIP","W", "SV", "WAR","PosNumber")])
+corrplot(correlation_matrix_ERA, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - ERA")
+#OPS Total
+correlation_matrix_OPS <- cor(Free.Agency.OPS[, c("AGE", "YRS", "contract_value", "OPS", "WAR", "dummy_Pos", "H", "RBI", "HR", "AVG","PosNumber")])
+corrplot(correlation_matrix_OPS, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - OPS")

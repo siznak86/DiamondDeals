@@ -264,6 +264,11 @@ Free.Agency.2022_omit_OPS$dummy_Years <- replace(Free.Agency.2022_omit_OPS$dummy
 Free.Agency.2022_omit_OPS <- replace(Free.Agency.2022_omit_OPS, is.na(Free.Agency.2022_omit_OPS), 0)
 
 
+#create a dataset with just WAR
+Free.Agency.2022_omit_WAR <- Free.Agency.2022_omit %>% select(-H, -RBI, -HR, -AVG, -OPS, -IP, -ERA, -WHIP, -W, -SV)
+Free.Agency.2022_omit_WAR$dummy_Years <- replace(Free.Agency.2022_omit_WAR$dummy_Years, is.na(Free.Agency.2022_omit_WAR$dummy_Years), 2)
+#Find Wars and Enter into original data
+
 
 # Cleaning Data by Omitting NA data 2023
 #cleaned_data <- data$column_name[!is.na(data$column_name)]
