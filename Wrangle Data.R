@@ -247,7 +247,6 @@ Free.Agency.2022_omit_ERA <- Free.Agency.2022_omit_ERA[!is.na(Free.Agency.2022_o
 #change all NA to 0
 Free.Agency.2022_omit_ERA <- replace(Free.Agency.2022_omit_ERA, is.na(Free.Agency.2022_omit_ERA), 0)
 
-
 #separating out pitching positions
 # removing pitchers
 # Column and value to remove
@@ -263,11 +262,12 @@ Free.Agency.2022_omit_OPS$dummy_Years <- replace(Free.Agency.2022_omit_OPS$dummy
 #change all NA to 0
 Free.Agency.2022_omit_OPS <- replace(Free.Agency.2022_omit_OPS, is.na(Free.Agency.2022_omit_OPS), 0)
 
-
 #create a dataset with just WAR
 Free.Agency.2022_omit_WAR <- Free.Agency.2022_omit %>% select(-H, -RBI, -HR, -AVG, -OPS, -IP, -ERA, -WHIP, -W, -SV)
+#changing NA Year to 2
 Free.Agency.2022_omit_WAR$dummy_Years <- replace(Free.Agency.2022_omit_WAR$dummy_Years, is.na(Free.Agency.2022_omit_WAR$dummy_Years), 2)
-#Find Wars and Enter into original data
+#Drop War that is NA
+Free.Agency.2022_omit_WAR <- Free.Agency.2022_omit_WAR[!is.na(Free.Agency.2022_omit_WAR$WAR), ]
 
 
 # Cleaning Data by Omitting NA data 2023
@@ -282,7 +282,6 @@ Free.Agency.2023_omit_ERA <- Free.Agency.2023_omit_ERA %>% select(-H, -RBI, -HR,
 Free.Agency.2023_omit_ERA <- Free.Agency.2023_omit_ERA[!is.na(Free.Agency.2023_omit_ERA$WAR), ]
 #change all NA to 0
 Free.Agency.2023_omit_ERA <- replace(Free.Agency.2023_omit_ERA, is.na(Free.Agency.2023_omit_ERA), 0)
-
 
 #separating out pitching positions
 # removing pitchers
@@ -301,6 +300,14 @@ Free.Agency.2023_omit_OPS$dummy_Years <- replace(Free.Agency.2023_omit_OPS$dummy
 #change all NA to 0
 Free.Agency.2023_omit_OPS <- replace(Free.Agency.2023_omit_OPS, is.na(Free.Agency.2023_omit_OPS), 0)
 
+#create a dataset with just WAR
+Free.Agency.2023_omit_WAR <- Free.Agency.2023_omit %>% select(-H, -RBI, -HR, -AVG, -OPS, -IP, -ERA, -WHIP, -W, -SV)
+#Removing NA Salary
+Free.Agency.2023_omit_WAR <- Free.Agency.2023_omit_WAR[!is.na(Free.Agency.2023_omit_WAR$dummy_salary), ]
+#changing NA Year to 2
+Free.Agency.2023_omit_WAR$dummy_Years <- replace(Free.Agency.2023_omit_WAR$dummy_Years, is.na(Free.Agency.2023_omit_WAR$dummy_Years), 2)
+#Drop War that is NA
+Free.Agency.2023_omit_WAR <- Free.Agency.2023_omit_WAR[!is.na(Free.Agency.2023_omit_WAR$WAR), ]
 
 
 
@@ -309,12 +316,14 @@ Free.Agency.2022.ERA <- Free.Agency.2022_omit_ERA
 Free.Agency.2022.OPS <- Free.Agency.2022_omit_OPS
 Free.Agency.2023.ERA <- Free.Agency.2023_omit_ERA
 Free.Agency.2023.OPS <- Free.Agency.2023_omit_OPS
+Free.Agency.2022.WAR <- Free.Agency.2022_omit_WAR
+Free.Agency.2023.WAR <- Free.Agency.2023_omit_WAR
 
 
 # Combining ERA and OPS for more data to run in analysis
 Free.Agency.ERA <- rbind(Free.Agency.2022.ERA, Free.Agency.2023.ERA)
 Free.Agency.OPS <- rbind(Free.Agency.2022.OPS, Free.Agency.2023.OPS)
-
+Free.Agency.WAR <- rbind(Free.Agency.2022.WAR, Free.Agency.2023.WAR)
 
 # Create a Master Sheet
 master_dataset <- PlayerIDs %>%
