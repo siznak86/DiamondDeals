@@ -1,5 +1,7 @@
 library(dplyr)
 
+## Import Free Agency Years Data Sets make sure to change YRS, DOLLARS, AVG. SALARY to numeric
+
 ## Creating Player IDs
 # Creating a Unified Data Set
 FreeAgencyTotal <- bind_rows(FreeAgency2019, FreeAgency2020, FreeAgency2021, FreeAgency2022, FreeAgency2023)
@@ -27,17 +29,31 @@ FreeAgencyTotal <- left_join(FreeAgencyTotal, select(FreeAgencyPlayerNames, PLAY
 FreeAgencyTotal <- FreeAgencyTotal %>%
   select(PlayerID, everything())
 
-# Making Years Numeric
-FreeAgencyTotal$YRS <- as.numeric(gsub("[^0-9.]", "", FreeAgencyTotal$YRS))
-
 
 ## Creating Dummy Values
+# Basic Positions Pitcher, Infield, Outfield, DH
 FreeAgencyTotal <- FreeAgencyTotal %>% 
   mutate(DummyPos = case_when(
     POS. %in% c("RP", "SP", "P") ~ 1,
     POS. %in% c("C", "1B", "2B", "3B", "SS") ~ 2,
     POS. %in% c("LF", "CF", "RF", "OF") ~ 3,
     POS. %in% c("DH") ~ 4,
+    TRUE ~ NA_integer_
+  ))
+
+# Advance Positions
+FreeAgencyTotal <- FreeAgencyTotal %>% 
+  mutate(PosNumber = case_when(
+    POS. %in% c("RP", "SP", "P") ~ 1,
+    POS. %in% c("C") ~ 2,
+    POS. %in% c("1B") ~ 3,
+    POS. %in% c("2B") ~ 4,
+    POS. %in% c("3B") ~ 5,
+    POS. %in% c("SS") ~ 6,
+    POS. %in% c("LF", "OF") ~ 7,
+    POS. %in% c("CF") ~ 8,
+    POS. %in% c("RF") ~ 9,
+    POS. %in% c("DH") ~ 10,
     TRUE ~ NA_integer_
   ))
 
