@@ -7,28 +7,7 @@ library(ggplot2)
 library(reshape2)
 library(broom)
 library(corrplot)
-
-# Fit a multinomial logistic regression model using the multinom function
-model_ERA <- multinom(dummy_Pos + dummy_Years + dummy_salary + dummy_Age ~ ERA, data = Free.Agency.ERA)
-# Perform stepwise selection using the step function
-step_model_ERA <- step(model_ERA)
-# Display the final model
-summary(step_model_ERA)
-
-# Fit a multinomial logistic regression model using the multinom function
-model_OPS <- multinom(dummy_Pos + dummy_Years + dummy_salary + dummy_Age ~ OPS, data = Free.Agency.OPS)
-# Perform stepwise selection using the step function
-step_model_OPS <- step(model_OPS)
-# Display the final model
-summary(step_model_OPS)
-
-
-# Fit a multinomial logistic regression model using the multinom function
-model_WAR <- multinom(dummy_salary ~ WAR, data = Free.Agency.2022.WAR)
-# Perform stepwise selection using the step function
-step_model_WAR <- step(model_WAR)
-# Display the final model
-summary(step_model_WAR)
+library(dplyr)
 
 # Graphing Data
 # Independent Variables x (ERA, OPS, WAR, Age)
@@ -155,9 +134,32 @@ correlation_matrix_WAR2023 <- cor(Free.Agency.2023.WAR[, C("AGE", "YRS", "contra
 corrplot(correlation_matrix_WAR2023, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - WAR 2023")
 
 #ERA Total
-correlation_matrix_ERA <- cor(Free.Agency.ERA[, c("AGE", "YRS", "contract_value", "ERA", "IP", "WHIP","W", "SV", "WAR","PosNumber")])
+correlation_matrix_ERA <- cor(Free.Agency.ERA[, c("AGE", "YRS", "contract_value", "ERA", "IP", "WHIP","W", "SV", "WAR", "PosNumber")])
 corrplot(correlation_matrix_ERA, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - ERA")
 #OPS Total
-correlation_matrix_OPS <- cor(Free.Agency.OPS[, c("AGE", "YRS", "contract_value", "OPS", "WAR", "dummy_Pos", "H", "RBI", "HR", "AVG","PosNumber")])
+correlation_matrix_OPS <- cor(Free.Agency.OPS[, c("AGE", "YRS", "contract_value", "OPS", "WAR", "dummy_Pos", "H", "RBI", "HR", "AVG", "PosNumber")])
 corrplot(correlation_matrix_OPS, method = "color", type = "full", tl.col = "black", tl.srt = 45, is.corr = TRUE, addCoef.col = "black", main="Correlation Plot - OPS")
 # WAR Total
+
+
+# Regressions 
+
+# Multiple Linear Regression
+model_ERA_multiLinear <- lm(contract_value ~ ERA + WAR + IP + WHIP + W + SV, data = Free.Agency.ERA)
+summary(model_ERA_multiLinear)
+
+predictions_ERA <- predict(model_ERA_multiLinear, newdata = Free.Agency.ERA)
+plot(model_ERA_multiLinear, which = 1)
+
+model_OPS_multiLinear <- lm(contract_value ~ OPS + WAR + H + RBI + HR + AVG, data = Free.Agency.OPS)
+summary(model_OPS_multiLinear)
+
+predictions_OPS <- predict(model_OPS_multiLinear, newdata = Free.Agency.OPS)
+plot(model_OPS_multiLinear, which = 1)
+
+# Stepwise Multinomial Logistic Regression 
+Free.Agency.WAR1 <- Free.Agency.WAR[complete.cases(Free.Agency.WAR), ]
+model_WAR_stepwise <- multinom(WAR ~ PosNumber, data = Free.Agency.WAR1)
+step_model_WAR <- step(model_WAR_stepwise)
+summary(step_model_WAR)
+
