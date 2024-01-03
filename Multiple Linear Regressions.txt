@@ -1,0 +1,49 @@
+Call:
+lm(formula = `AVG. SALARY` ~ OPS + WAR + H + RBI + HR + AVG + 
+    PosNumber, data = FreeAgencyOPS)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-8529044 -3019214  -950529  2520081 17811979 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -1235253    2108585  -0.586  0.55849    
+OPS          3441859    6577693   0.523  0.60122    
+WAR          2716527     275090   9.875  < 2e-16 ***
+H               8189      18619   0.440  0.66043    
+RBI           -36691      41640  -0.881  0.37902    
+HR            270598      91420   2.960  0.00335 ** 
+AVG          -348319   16745844  -0.021  0.98342    
+PosNumber     117509     113925   1.031  0.30325    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4672000 on 270 degrees of freedom
+Multiple R-squared:  0.6331,	Adjusted R-squared:  0.6236 
+F-statistic: 66.56 on 7 and 270 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = `AVG. SALARY` ~ ERA + WAR + IP + WHIP + W + SV, 
+    data = FreeAgencyERA)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-10828576  -2881721   -729529   2248286  26809003 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  5806503    1304900   4.450 1.18e-05 ***
+ERA           743499     204833   3.630 0.000330 ***
+WAR          2301280     307843   7.476 7.25e-13 ***
+IP              4263      10579   0.403 0.687238    
+WHIP        -5165425    1319690  -3.914 0.000111 ***
+W             485333     147410   3.292 0.001103 ** 
+SV             93525      37279   2.509 0.012602 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4759000 on 324 degrees of freedom
+Multiple R-squared:  0.5345,	Adjusted R-squared:  0.5259 
+F-statistic: 62.01 on 6 and 324 DF,  p-value: < 2.2e-16
