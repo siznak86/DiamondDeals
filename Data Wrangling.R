@@ -79,6 +79,10 @@ FreeAgencyERA <- FreeAgencyERA %>%
 FreeAgencyERA <- FreeAgencyERA %>% 
   mutate(WHIP = ifelse(is.na(WHIP), 0, WHIP))
 
+## Dropping Erroneous Columns
+drop <- c("POS", "BATS", "THROWS", "FROM", "TO")
+FreeAgencyERA = FreeAgencyERA[,!(names(FreeAgencyERA) %in% drop)]
+
 ## Saving Free Agency ERA Data Set
 write.csv(FreeAgencyERA, "FreeAgencyERA.csv", row.names = FALSE)
 
@@ -107,6 +111,10 @@ FreeAgencyOPS <- FreeAgencyOPS %>%
 # Changing H NA to 0
 FreeAgencyOPS <- FreeAgencyOPS %>% 
   mutate(H = ifelse(is.na(H), 0, H))
+
+## Dropping Erroneous Columns
+drop <- c("POS", "BATS", "THROWS", "FROM", "TO")
+FreeAgencyOPS = FreeAgencyOPS[,!(names(FreeAgencyOPS) %in% drop)]
 
 ## Saving Free Agency OPS Data Set
 write.csv(FreeAgencyOPS, "FreeAgencyOPS.csv", row.names = FALSE)

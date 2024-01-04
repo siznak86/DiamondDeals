@@ -1,6 +1,19 @@
+# Packages for Stepwise Linear Regression
+#install.packages("mediation")
+#install.packages("moderndive")
+
 library(corrplot)
 library(ggplot2)
+library(ggplotify)
 library(nnet)
+library(mediation)
+library(moderndive)
+library(readxl)
+library(interactions)
+library(jtools)
+library(forecast)
+library(car)
+
 
 ## Correlation Plots
 # ERA
@@ -109,7 +122,30 @@ summary(model_ERA_multiLinear)
 #Significance found in all except IP 
 
 predictions_ERA <- predict(model_ERA_multiLinear, newdata = FreeAgencyERA)
-plot(model_ERA_multiLinear, which = 1)
+plot(model_ERA_multiLinear)
+# Linearity and Additivity
+plot(model_ERA_multiLinear$fitted.values, model_ERA_multiLinear$residuals,
+     xlab = "Predicted values", ylab = "Residuals")
+  abline(h = 0, col = "red")
+# Independence of Residuals
+Acf(model_ERA_multiLinear$residuals, main = "ACF of Model Residuals")
+# Homoscedasticity
+plot(model_ERA_multiLinear$fitted.values, abs(model_ERA_multiLinear$residuals), 
+     xlab = "Predicted values", ylab = "Absolute Residuals")
+# Normality of Errors
+qqnorm(model_ERA_multiLinear$residuals)
+qqline(model_ERA_multiLinear$residuals)
+# Absence of Multicollinearity
+vif(model_ERA_multiLinear)
+# No Influential Outliers
+cooksd <- cooks.distance(model_ERA_multiLinear)
+threshold <- 4/length(cooksd)
+yrange <- c(0, max(cooksd, threshold) * 1.1)
+plot(cooksd, ylim = yrange, main = "Influential Observations by Cook's distance", pch = 16)
+  abline(h = threshold, col = "red")
+
+  
+  
 
 # Multiple Linear Regression OPS
 model_OPS_multiLinear <- lm(`AVG. SALARY` ~ OPS + WAR + H + RBI + HR + AVG + PosNumber, data = FreeAgencyOPS)
@@ -118,5 +154,27 @@ summary(model_OPS_multiLinear)
 
 predictions_OPS <- predict(model_OPS_multiLinear, newdata = FreeAgencyOPS)
 plot(model_OPS_multiLinear, which = 1)
+plot(model_OPS_multiLinear$fitted.values, model_OPS_multiLinear$residuals,
+     xlab = "Predicted values", ylab = "Residuals")
+  abline(h = 0, col = "red")
 
+
+  
+
+## Check for mediation and moderation while running stepwise linear regression
+# Stepwise linear regression
+step_model_ERA <- step(lm(`AVG. SALARY` ~ ., data = FreeAgencyERA), direction = "both")
+
+# Mediation analysis
+mediation_model_ERA <- lm(AGE ~ ERA, data = FreeAgencyERA)
+mediate_model_ERA <- mediate(mediation_model_ERA, `AVG. SALARY` ~ ERA)
+
+# Moderation analysis
+moderation_model_ERA <- lm(`AVG. SALARY` ~ ERA * SV, data = FreeAgencyERA)
+
+# Display results
+summary(step_model_ERA)
+summary(mediation_model_ERA)
+summary(mediate_model_ERA)
+summary(moderation_model_ERA)
 
