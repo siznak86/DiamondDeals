@@ -161,20 +161,48 @@ plot(model_OPS_multiLinear$fitted.values, model_OPS_multiLinear$residuals,
 
   
 
-## Check for mediation and moderation while running stepwise linear regression
-# Stepwise linear regression
+## Check for mediation and moderation while running step wise linear regression
+# ERA
+# Step wise linear regression
 step_model_ERA <- step(lm(`AVG. SALARY` ~ ., data = FreeAgencyERA), direction = "both")
 
-# Mediation analysis
-mediation_model_ERA <- lm(AGE ~ ERA, data = FreeAgencyERA)
-mediate_model_ERA <- mediate(mediation_model_ERA, `AVG. SALARY` ~ ERA)
-
-# Moderation analysis
-moderation_model_ERA <- lm(`AVG. SALARY` ~ ERA * SV, data = FreeAgencyERA)
-
-# Display results
 summary(step_model_ERA)
+
+# Mediation analysis
+# Using the top two significant variables
+mediation_model_ERA <- lm(WAR ~ WHIP, data = FreeAgencyERA)
+outcome_model_ERA <- lm(`AVG. SALARY` ~ WAR + WHIP, data = FreeAgencyERA)
+mediate_model_ERA <- mediate(mediation_model_ERA, outcome_model_ERA, treat = "WHIP", mediator = "WAR")
+
 summary(mediation_model_ERA)
 summary(mediate_model_ERA)
+
+# Moderation analysis
+moderation_model_ERA <- lm(`AVG. SALARY` ~ WAR * ERA, data = FreeAgencyERA)
+
 summary(moderation_model_ERA)
 
+# Combined Mediation-Moderation Analysis 
+#combined_model <- mediation_model_ERA ~ a*WAR ~ b*WAR + c*WHIP + d*ERA + e*WAR*ERA
+#fit <- sem(combined_model, data = FreeAgencyERA) 
+#summary(fit) 
+
+# OPS
+# Step wise linear regression
+step_model_OPS <- step(lm(`AVG. SALARY` ~ ., data = FreeAgencyOPS), direction = "both")
+
+summary(step_model_OPS)
+
+# Mediation analysis
+# Using the top two significant variables
+mediation_model_OPS <- lm(WAR ~ HR, data = FreeAgencyOPS)
+outcome_model_OPS <- lm(`AVG. SALARY` ~ WAR + HR, data = FreeAgencyOPS)
+mediate_model_OPS <- mediate(mediation_model_OPS, outcome_model_OPS, treat = "HR", mediator = "WAR")
+
+summary(mediation_model_OPS)
+summary(mediate_model_OPS)
+
+# Moderation analysis
+moderation_model_OPS <- lm(`AVG. SALARY` ~ WAR * AVG, data = FreeAgencyOPS)
+
+summary(moderation_model_OPS)
