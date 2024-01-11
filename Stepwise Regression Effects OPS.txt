@@ -1,0 +1,140 @@
+Stepwise Regression Effects OPS
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-7938800 -3193681  -755763  2471756 18202545 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  9170388    3193715   2.871  0.00441 ** 
+AGE          -351559      87841  -4.002 8.09e-05 ***
+HR            213328      39577   5.390 1.52e-07 ***
+OPS          5079409    2914570   1.743  0.08250 .  
+WAR          2626170     247127  10.627  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4533000 on 273 degrees of freedom
+Multiple R-squared:  0.6508,	Adjusted R-squared:  0.6457 
+F-statistic: 127.2 on 4 and 273 DF,  p-value: < 2.2e-16
+
+RBI, AVG, H: Not Significant
+
+Interpretation of coefficients:
+Intercept: The average predicted AVG. SALARY when all other variables are zero is $9,170,388
+AGE: For each additional year in age, the average salary is estimated to decrease by approximately $351,559.
+HR: For each additional home run, the average salary is estimated to increase by approximately $213,328.
+OPS: The coefficient for OPS is approximately $5,079,409. However, its p-value is 0.08250, which is above the common significance level of 0.05, suggesting that OPS may not be statistically significant in predicting AVG. SALARY in this model.
+WAR: For each additional win above replacement, the average salary is estimated to increase by approximately $2,626,170.
+
+The adjusted R-squared for this model indicates that the included variables collectively explain about 64.57% of the variability in AVG. SALARY.
+
+
+Mediation Analysis 
+Mediator(HR) IV(WAR) DV(AVG. SALARY)
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-14.679  -5.385  -1.598   4.299  24.651 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   7.7989     0.5385   14.48   <2e-16 ***
+WAR           4.0369     0.2768   14.58   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 7.211 on 276 degrees of freedom
+Multiple R-squared:  0.4352,	Adjusted R-squared:  0.4331 
+F-statistic: 212.6 on 1 and 276 DF,  p-value: < 2.2e-16
+
+Causal Mediation Analysis 
+
+Nonparametric Bootstrap Confidence Intervals with the Percentile Method
+
+               Estimate 95% CI Lower 95% CI Upper p-value    
+ACME           9.20e+05     5.50e+05     1.29e+06  <2e-16 ***
+ADE            2.79e+06     2.20e+06     3.37e+06  <2e-16 ***
+Total Effect   3.71e+06     3.29e+06     4.09e+06  <2e-16 ***
+Prop. Mediated 2.48e-01     1.45e-01     3.60e-01  <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Sample Size Used: 278 
+
+
+Simulations: 1000 
+
+Mediator(OPS) IV(WAR) DV(AVG. SALARY)
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.55201 -0.05472  0.00174  0.05437  0.35194 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 0.679431   0.007370   92.19   <2e-16 ***
+WAR         0.045607   0.003789   12.04   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.09868 on 276 degrees of freedom
+Multiple R-squared:  0.3443,	Adjusted R-squared:  0.3419 
+F-statistic: 144.9 on 1 and 276 DF,  p-value: < 2.2e-16
+
+Causal Mediation Analysis 
+
+Nonparametric Bootstrap Confidence Intervals with the Percentile Method
+
+               Estimate 95% CI Lower 95% CI Upper p-value    
+ACME           3.74e+05     1.23e+05     7.02e+05   0.004 ** 
+ADE            3.34e+06     2.79e+06     3.81e+06  <2e-16 ***
+Total Effect   3.71e+06     3.31e+06     4.12e+06  <2e-16 ***
+Prop. Mediated 1.01e-01     3.18e-02     1.90e-01   0.004 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Sample Size Used: 278 
+
+
+Simulations: 1000 
+
+Mediation Effect: Approximately 25% of the effect is mediated through HR and 10% through OPS.
+
+Moderation analysis
+
+Moderator(AGE) IV(WAR) DV(AVG. SALARY)
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-8912667 -3087318 -1205838  2114211 17966745 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  5770626    3455903   1.670 0.096103 .  
+WAR         11492116    2005526   5.730 2.64e-08 ***
+AGE           -75248     109331  -0.688 0.491869    
+WAR:AGE      -251461      64606  -3.892 0.000125 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4724000 on 274 degrees of freedom
+Multiple R-squared:  0.6193,	Adjusted R-squared:  0.6152 
+F-statistic: 148.6 on 3 and 274 DF,  p-value: < 2.2e-16
+
+Moderator(HR) IV(WAR) DV(AVG. SALARY)
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-12776909  -2978971   -785370   2190086  17193652 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -1205867    2044484  -0.590 0.555801    
+WAR          -278975    1061046  -0.263 0.792807    
+OPS          6656395    2948403   2.258 0.024756 *  
+WAR:OPS      4233340    1213285   3.489 0.000564 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4779000 on 274 degrees of freedom
+Multiple R-squared:  0.6104,	Adjusted R-squared:  0.6061 
+F-statistic: 143.1 on 3 and 274 DF,  p-value: < 2.2e-16
+
+Moderation Effect: AGE and OPS moderates the relationship between WAR and AVG. SALARY.

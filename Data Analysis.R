@@ -2,6 +2,7 @@
 #install.packages("mediation")
 #install.packages("moderndive")
 
+
 library(corrplot)
 library(ggplot2)
 library(ggplotify)
@@ -13,6 +14,110 @@ library(interactions)
 library(jtools)
 library(forecast)
 library(car)
+
+
+## Basic Stats
+# ERA
+# Mean
+mean(FreeAgencyERA$AGE)
+mean(FreeAgencyERA$`AVG. SALARY`)
+mean(FreeAgencyERA$IP)
+mean(FreeAgencyERA$ERA)
+mean(FreeAgencyERA$WHIP)
+mean(FreeAgencyERA$W)
+mean(FreeAgencyERA$SV)
+mean(FreeAgencyERA$WAR)
+
+# Median
+median(FreeAgencyERA$AGE)
+median(FreeAgencyERA$`AVG. SALARY`)
+median(FreeAgencyERA$IP)
+median(FreeAgencyERA$ERA)
+median(FreeAgencyERA$WHIP)
+median(FreeAgencyERA$W)
+median(FreeAgencyERA$SV)
+median(FreeAgencyERA$WAR)
+
+# Minimum
+min(FreeAgencyERA$AGE)
+min(FreeAgencyERA$`AVG. SALARY`)
+min(FreeAgencyERA$IP)
+min(FreeAgencyERA$ERA)
+min(FreeAgencyERA$WHIP)
+min(FreeAgencyERA$W)
+min(FreeAgencyERA$SV)
+min(FreeAgencyERA$WAR)
+
+# Maximum
+max(FreeAgencyERA$AGE)
+max(FreeAgencyERA$`AVG. SALARY`)
+max(FreeAgencyERA$IP)
+max(FreeAgencyERA$ERA)
+max(FreeAgencyERA$WHIP)
+max(FreeAgencyERA$W)
+max(FreeAgencyERA$SV)
+max(FreeAgencyERA$WAR)
+
+# Standard Deviation
+sd(FreeAgencyERA$AGE)
+sd(FreeAgencyERA$`AVG. SALARY`)
+sd(FreeAgencyERA$IP)
+sd(FreeAgencyERA$ERA)
+sd(FreeAgencyERA$WHIP)
+sd(FreeAgencyERA$W)
+sd(FreeAgencyERA$SV)
+sd(FreeAgencyERA$WAR)
+
+# OPS
+# Mean
+mean(FreeAgencyOPS$AGE)
+mean(FreeAgencyOPS$`AVG. SALARY`)
+mean(FreeAgencyOPS$H)
+mean(FreeAgencyOPS$RBI)
+mean(FreeAgencyOPS$HR)
+mean(FreeAgencyOPS$AVG)
+mean(FreeAgencyOPS$OPS)
+mean(FreeAgencyOPS$WAR)
+
+# Median
+median(FreeAgencyOPS$AGE)
+median(FreeAgencyOPS$`AVG. SALARY`)
+median(FreeAgencyOPS$H)
+median(FreeAgencyOPS$RBI)
+median(FreeAgencyOPS$HR)
+median(FreeAgencyOPS$AVG)
+median(FreeAgencyOPS$OPS)
+median(FreeAgencyOPS$WAR)
+
+# Minimum
+min(FreeAgencyOPS$AGE)
+min(FreeAgencyOPS$`AVG. SALARY`)
+min(FreeAgencyOPS$H)
+min(FreeAgencyOPS$RBI)
+min(FreeAgencyOPS$HR)
+min(FreeAgencyOPS$AVG)
+min(FreeAgencyOPS$OPS)
+min(FreeAgencyOPS$WAR)
+
+# Maximum
+max(FreeAgencyOPS$AGE)
+max(FreeAgencyOPS$`AVG. SALARY`)
+max(FreeAgencyOPS$H)
+max(FreeAgencyOPS$RBI)
+max(FreeAgencyOPS$HR)
+max(FreeAgencyOPS$AVG)
+max(FreeAgencyOPS$OPS)
+max(FreeAgencyOPS$WAR)
+
+# Standard Deviation
+sd(FreeAgencyOPS$AGE)
+sd(FreeAgencyOPS$`AVG. SALARY`)
+sd(FreeAgencyOPS$H)
+sd(FreeAgencyOPS$RBI)
+sd(FreeAgencyOPS$HR)
+sd(FreeAgencyOPS$AVG)
+sd(FreeAgencyOPS$OPS)
+sd(FreeAgencyOPS$WAR)
 
 
 ## Correlation Plots
@@ -164,45 +269,147 @@ plot(model_OPS_multiLinear$fitted.values, model_OPS_multiLinear$residuals,
 ## Check for mediation and moderation while running step wise linear regression
 # ERA
 # Step wise linear regression
-step_model_ERA <- step(lm(`AVG. SALARY` ~ ., data = FreeAgencyERA), direction = "both")
+step_model_ERA <- step(lm(`AVG. SALARY` ~ AGE + IP + ERA + WHIP + W + SV + WAR, data = FreeAgencyERA), direction = "both")
 
 summary(step_model_ERA)
 
 # Mediation analysis
-# Using the top two significant variables
-mediation_model_ERA <- lm(WAR ~ WHIP, data = FreeAgencyERA)
-outcome_model_ERA <- lm(`AVG. SALARY` ~ WAR + WHIP, data = FreeAgencyERA)
-mediate_model_ERA <- mediate(mediation_model_ERA, outcome_model_ERA, treat = "WHIP", mediator = "WAR")
+# Mediator(AGE) IV(WAR) DV(AVG. SALRARY) Control()
+mediation_model_ERA_AGE <- lm(AGE ~ WAR, data = FreeAgencyERA)
+outcome_model_ERA_AGE <- lm(`AVG. SALARY` ~ WAR + AGE, data = FreeAgencyERA)
+mediate_model_ERA_AGE <- mediate(mediation_model_ERA_AGE, outcome_model_ERA_AGE, treat = "WAR", mediator = "AGE", boot = TRUE)
 
-summary(mediation_model_ERA)
-summary(mediate_model_ERA)
+summary(mediation_model_ERA_AGE)
+summary(mediate_model_ERA_AGE)
+# Maybe Significant p = .056
+
+# Mediator(ERA) IV(WAR) DV(AVG. SALRARY) Control()
+mediation_model_ERA_ERA <- lm(ERA ~ WAR, data = FreeAgencyERA)
+outcome_model_ERA_ERA <- lm(`AVG. SALARY` ~ WAR + ERA, data = FreeAgencyERA)
+mediate_model_ERA_ERA <- mediate(mediation_model_ERA_ERA, outcome_model_ERA_ERA, treat = "WAR", mediator = "ERA", boot = TRUE)
+
+summary(mediation_model_ERA_ERA)
+summary(mediate_model_ERA_ERA)
+# Maybe Significant p = .084
+
+# Mediator(WHIP) IV(WAR) DV(AVG. SALRARY) Control()
+mediation_model_ERA_WHIP <- lm(WHIP ~ WAR, data = FreeAgencyERA)
+outcome_model_ERA_WHIP <- lm(`AVG. SALARY` ~ WAR + WHIP, data = FreeAgencyERA)
+mediate_model_ERA_WHIP <- mediate(mediation_model_ERA_WHIP, outcome_model_ERA_WHIP, treat = "WAR", mediator = "WHIP", boot = TRUE)
+
+summary(mediation_model_ERA_WHIP)
+summary(mediate_model_ERA_WHIP)
+# Not Significant
+
+# Mediator(W) IV(WAR) DV(AVG. SALRARY) Control()
+mediation_model_ERA_W <- lm(W ~ WAR, data = FreeAgencyERA)
+outcome_model_ERA_W <- lm(`AVG. SALARY` ~ WAR + W, data = FreeAgencyERA)
+mediate_model_ERA_W <- mediate(mediation_model_ERA_W, outcome_model_ERA_W, treat = "WAR", mediator = "W", boot = TRUE)
+
+summary(mediation_model_ERA_W)
+summary(mediate_model_ERA_W)
+# Significant
+
+# Mediator(SV) IV(WAR) DV(AVG. SALRARY) Control()
+mediation_model_ERA_SV <- lm(SV ~ WAR, data = FreeAgencyERA)
+outcome_model_ERA_SV <- lm(`AVG. SALARY` ~ WAR + SV, data = FreeAgencyERA)
+mediate_model_ERA_SV <- mediate(mediation_model_ERA_SV, outcome_model_ERA_SV, treat = "WAR", mediator = "SV", boot = TRUE)
+
+summary(mediation_model_ERA_SV)
+summary(mediate_model_ERA_SV)
+# Not Significant
 
 # Moderation analysis
-moderation_model_ERA <- lm(`AVG. SALARY` ~ WAR * ERA, data = FreeAgencyERA)
+# Moderator(AGE) IV(WAR) DV(AVG. SALARY)
+moderation_model_ERA_AGE <- lm(`AVG. SALARY` ~ WAR * AGE, data = FreeAgencyERA)
 
-summary(moderation_model_ERA)
+summary(moderation_model_ERA_AGE)
+# Not Significant
+
+# Moderator(ERA) IV(WAR) DV(AVG. SALARY)
+moderation_model_ERA_ERA <- lm(`AVG. SALARY` ~ WAR * ERA, data = FreeAgencyERA)
+
+summary(moderation_model_ERA_ERA)
+# Not Significant
+
+# Moderator(WHIP) IV(WAR) DV(AVG. SALARY)
+moderation_model_ERA_WHIP <- lm(`AVG. SALARY` ~ WAR * WHIP, data = FreeAgencyERA)
+
+summary(moderation_model_ERA_WHIP)
+# Significant p = 1.43e-07
+
+# Moderator(W) IV(WAR) DV(AVG. SALARY)
+moderation_model_ERA_W <- lm(`AVG. SALARY` ~ WAR * W, data = FreeAgencyERA)
+
+summary(moderation_model_ERA_W)
+# Significnat p = .000168
+
+# Moderator(SV) IV(WAR) DV(AVG. SALARY)
+moderation_model_ERA_SV <- lm(`AVG. SALARY` ~ WAR * SV, data = FreeAgencyERA)
+
+summary(moderation_model_ERA_SV)
+# Not Significant
 
 # Combined Mediation-Moderation Analysis 
-#combined_model <- mediation_model_ERA ~ a*WAR ~ b*WAR + c*WHIP + d*ERA + e*WAR*ERA
-#fit <- sem(combined_model, data = FreeAgencyERA) 
-#summary(fit) 
+combined_model_ERA <- lm(`AVG. SALARY` ~ WAR * W * WHIP, data = FreeAgencyERA)
+
+summary(combined_model_ERA)
+ 
 
 # OPS
 # Step wise linear regression
-step_model_OPS <- step(lm(`AVG. SALARY` ~ ., data = FreeAgencyOPS), direction = "both")
+step_model_OPS <- step(lm(`AVG. SALARY` ~ AGE + H + RBI + HR + AVG + OPS + WAR, data = FreeAgencyOPS), direction = "both")
 
 summary(step_model_OPS)
 
 # Mediation analysis
-# Using the top two significant variables
-mediation_model_OPS <- lm(WAR ~ HR, data = FreeAgencyOPS)
-outcome_model_OPS <- lm(`AVG. SALARY` ~ WAR + HR, data = FreeAgencyOPS)
-mediate_model_OPS <- mediate(mediation_model_OPS, outcome_model_OPS, treat = "HR", mediator = "WAR")
+# Mediator(AGE) IV(WAR) DV(AVG. SALARY)
+mediation_model_OPS_AGE <- lm(AGE ~ WAR, data = FreeAgencyOPS)
+outcome_model_OPS_AGE <- lm(`AVG. SALARY` ~ WAR + AGE, data = FreeAgencyOPS)
+mediate_model_OPS_AGE <- mediate(mediation_model_OPS_AGE, outcome_model_OPS_AGE, treat = "WAR", mediator = "AGE", boot = TRUE)
 
-summary(mediation_model_OPS)
-summary(mediate_model_OPS)
+summary(mediation_model_OPS_AGE)
+summary(mediate_model_OPS_AGE)
+# Not Significant
+
+# Mediator(HR) IV(WAR) DV(AVG. SALARY)
+mediation_model_OPS_HR <- lm(HR ~ WAR, data = FreeAgencyOPS)
+outcome_model_OPS_HR <- lm(`AVG. SALARY` ~ WAR + HR, data = FreeAgencyOPS)
+mediate_model_OPS_HR <- mediate(mediation_model_OPS_HR, outcome_model_OPS_HR, treat = "WAR", mediator = "HR", boot = TRUE)
+
+summary(mediation_model_OPS_HR)
+summary(mediate_model_OPS_HR)
+# Significant p = 2e-16
+
+# Mediator(OPS) IV(WAR) DV(AVG. SALARY)
+mediation_model_OPS_OPS <- lm(OPS ~ WAR, data = FreeAgencyOPS)
+outcome_model_OPS_OPS <- lm(`AVG. SALARY` ~ WAR + OPS, data = FreeAgencyOPS)
+mediate_model_OPS_OPS <- mediate(mediation_model_OPS_OPS, outcome_model_OPS_OPS, treat = "WAR", mediator = "OPS", boot = TRUE)
+
+summary(mediation_model_OPS_OPS)
+summary(mediate_model_OPS_OPS)
+# Significant p = .004
 
 # Moderation analysis
-moderation_model_OPS <- lm(`AVG. SALARY` ~ WAR * AVG, data = FreeAgencyOPS)
+# Moderator(AGE) IV(WAR) DV(AVG. SALARY)
+moderation_model_OPS_AGE <- lm(`AVG. SALARY` ~ WAR * AGE, data = FreeAgencyOPS)
 
-summary(moderation_model_OPS)
+summary(moderation_model_OPS_AGE)
+# Significant p = .000125
+
+# Moderator(HR) IV(WAR) DV(AVG. SALARY)
+moderation_model_OPS_HR <- lm(`AVG. SALARY` ~ WAR * HR, data = FreeAgencyOPS)
+
+summary(moderation_model_OPS_HR)
+# Maybe Significant p = .945
+
+# Moderator(OPS) IV(WAR) DV(AVG. SALARY)
+moderation_model_OPS_OPS <- lm(`AVG. SALARY` ~ WAR * OPS, data = FreeAgencyOPS)
+
+summary(moderation_model_OPS_OPS)
+# Significant p = .000564
+
+# Combined Mediation-Moderation Analysis 
+combined_model_OPS <- lm(`AVG. SALARY` ~ WAR * AGE * HR * OPS, data = FreeAgencyOPS)
+
+summary(combined_model_OPS)

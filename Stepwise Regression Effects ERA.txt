@@ -1,0 +1,109 @@
+Stepwise Regression Effects ERA 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 15901686    3612301   4.402 1.46e-05 ***
+AGE          -284546      95884  -2.968 0.003225 ** 
+ERA           724465     202205   3.583 0.000392 ***
+WHIP        -5699905    1315067  -4.334 1.95e-05 ***
+W             533834      88633   6.023 4.64e-09 ***
+SV             93039      36410   2.555 0.011065 *  
+WAR          2310227     302467   7.638 2.51e-13 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4697000 on 324 degrees of freedom
+Multiple R-squared:  0.5466,	Adjusted R-squared:  0.5382 
+F-statistic: 65.11 on 6 and 324 DF,  p-value: < 2.2e-16
+
+IP: Not Significant
+
+Interpretation of coefficients:
+Intercept: The average predicted AVG. SALARY when all other variables are zero is $15,901,686
+AGE: For each additional year in age, the average salary is estimated to decrease by approximately $284,546.
+ERA: For each additional earned run average, the average salary is estimated to increase by approximately $724,465.
+WHIP: For each additional walks plus hits per inning pitched, the average salary is estimated to decrease by approximately $5,699,905.
+W: For each additional win, the average salary is estimated to increase by approximately $533,834.
+SV: For each additional save, the average salary is estimated to increase by approximately $93,039.
+WAR: For each additional win above replacement, the average salary is estimated to increase by approximately $2,310,227.
+
+The adjusted R-squared for this model indicates that the included variables collectively explain about 53.82% of the variability in AVG. SALARY.
+
+
+Mediation Analysis
+Mediator(W) IV(WAR) DV(AVG. SALRARY)
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.4746 -2.0921 -0.6701  1.5749 12.0598 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   2.6620     0.1932   13.78   <2e-16 ***
+WAR           2.2119     0.1240   17.84   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.964 on 329 degrees of freedom
+Multiple R-squared:  0.4917,	Adjusted R-squared:  0.4902 
+F-statistic: 318.3 on 1 and 329 DF,  p-value: < 2.2e-16
+
+Causal Mediation Analysis 
+
+Nonparametric Bootstrap Confidence Intervals with the Percentile Method
+
+               Estimate 95% CI Lower 95% CI Upper p-value    
+ACME           1.09e+06     6.60e+05     1.54e+06  <2e-16 ***
+ADE            2.47e+06     1.87e+06     3.12e+06  <2e-16 ***
+Total Effect   3.56e+06     2.98e+06     4.11e+06  <2e-16 ***
+Prop. Mediated 3.06e-01     1.90e-01     4.30e-01  <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Sample Size Used: 331 
+
+
+Simulations: 1000 
+
+
+Mediation Effect: Approximately 30% of the effect is mediated through W.
+
+
+Moderation analysis
+Moderator(WHIP) IV(WAR) DV(AVG. SALARY)
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-11708858  -3087161   -818348   2528558  24883558 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  6789900    1253969   5.415 1.19e-07 ***
+WAR          8171998     907810   9.002  < 2e-16 ***
+WHIP        -2215221     886099  -2.500   0.0129 *  
+WAR:WHIP    -4334535     805779  -5.379 1.43e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4888000 on 327 degrees of freedom
+Multiple R-squared:  0.5044,	Adjusted R-squared:  0.4998 
+F-statistic: 110.9 on 3 and 327 DF,  p-value: < 2.2e-16
+
+Moderator(W) IV(WAR) DV(AVG. SALARY)
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-11555400  -2792318   -869748   2034959  29266943 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3348632     432741   7.738 1.27e-13 ***
+WAR          1208218     434587   2.780 0.005748 ** 
+W             331998      98483   3.371 0.000838 ***
+WAR:W         142080      37323   3.807 0.000168 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4792000 on 327 degrees of freedom
+Multiple R-squared:  0.5237,	Adjusted R-squared:  0.5193 
+F-statistic: 119.8 on 3 and 327 DF,  p-value: < 2.2e-16
+
+Moderation Effect: Both WHIP and W moderate the relationship between WAR and AVG. SALARY, how ever WHIP has a greater significance.
+
