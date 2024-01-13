@@ -119,7 +119,7 @@ Residual standard error: 4724000 on 274 degrees of freedom
 Multiple R-squared:  0.6193,	Adjusted R-squared:  0.6152 
 F-statistic: 148.6 on 3 and 274 DF,  p-value: < 2.2e-16
 
-Moderator(HR) IV(WAR) DV(AVG. SALARY)
+Moderator(OPS) IV(WAR) DV(AVG. SALARY)
 Residuals:
       Min        1Q    Median        3Q       Max 
 -12776909  -2978971   -785370   2190086  17193652 

@@ -281,7 +281,7 @@ mediate_model_ERA_AGE <- mediate(mediation_model_ERA_AGE, outcome_model_ERA_AGE,
 
 summary(mediation_model_ERA_AGE)
 summary(mediate_model_ERA_AGE)
-# Maybe Significant p = .056
+# Maybe Significant p = .064
 
 # Mediator(ERA) IV(WAR) DV(AVG. SALRARY) Control()
 mediation_model_ERA_ERA <- lm(ERA ~ WAR, data = FreeAgencyERA)
@@ -290,7 +290,7 @@ mediate_model_ERA_ERA <- mediate(mediation_model_ERA_ERA, outcome_model_ERA_ERA,
 
 summary(mediation_model_ERA_ERA)
 summary(mediate_model_ERA_ERA)
-# Maybe Significant p = .084
+# Maybe Significant p = .094
 
 # Mediator(WHIP) IV(WAR) DV(AVG. SALRARY) Control()
 mediation_model_ERA_WHIP <- lm(WHIP ~ WAR, data = FreeAgencyERA)
@@ -308,7 +308,7 @@ mediate_model_ERA_W <- mediate(mediation_model_ERA_W, outcome_model_ERA_W, treat
 
 summary(mediation_model_ERA_W)
 summary(mediate_model_ERA_W)
-# Significant
+# Significant p = 2e-16
 
 # Mediator(SV) IV(WAR) DV(AVG. SALRARY) Control()
 mediation_model_ERA_SV <- lm(SV ~ WAR, data = FreeAgencyERA)
