@@ -118,3 +118,19 @@ FreeAgencyOPS = FreeAgencyOPS[,!(names(FreeAgencyOPS) %in% drop)]
 
 ## Saving Free Agency OPS Data Set
 write.csv(FreeAgencyOPS, "FreeAgencyOPS.csv", row.names = FALSE)
+
+## Creating Table for Post Analysis
+FreeAgencyERA_Results <- FreeAgencyERA
+FreeAgencyOPS_Results <- FreeAgencyOPS
+
+# Dropping columns
+## Dropping Erroneous Columns
+drop1 <- c("POS.", "YRS", "DOLLARS", "YEAR", "DummyPos", "PosNumber")
+FreeAgencyERA_Results = FreeAgencyERA_Results[,!(names(FreeAgencyERA_Results) %in% drop1)]
+
+drop2 <- c("POS.", "YRS", "DOLLARS", "YEAR","DummyPos", "PosNumber")
+FreeAgencyOPS_Results = FreeAgencyOPS_Results[,!(names(FreeAgencyOPS_Results) %in% drop2)]
+
+## Saving Free Agency Results Data Set
+write.csv(FreeAgencyERA_Results, "FreeAgencyERA_Results.csv", row.names = FALSE)
+write.csv(FreeAgencyOPS_Results, "FreeAgencyOPS_Results.csv", row.names = FALSE)
