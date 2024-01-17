@@ -457,7 +457,7 @@ FreeAgencyERA_Results$Predicted_Salary <- exp(16.064277 +  0.154367*FreeAgencyER
 # Percent Difference = ((Predicted - AVG.SALARY)/AVG. SALARY)
 FreeAgencyERA_Results$Model_Difference <- ((FreeAgencyERA_Results$Predicted_Salary - FreeAgencyERA_Results$`AVG. SALARY`)/FreeAgencyERA_Results$`AVG. SALARY`)
 
-# Averge Difference
+# Average Difference
 mean(FreeAgencyERA_Results$Model_Difference)
 # .1343679 = 13.44%
 
@@ -465,6 +465,7 @@ mean(FreeAgencyERA_Results$Model_Difference)
 sd(FreeAgencyERA_Results$Model_Difference)
 # 1.051311
 
+summary(FreeAgencyERA_Results$Model_Difference)
 
 # OPS
 # Salary = exp(Intercept + (WAR Coefficient * WAR) + (AGE Coefficient * AGE) + (H Coefficient * H) + (AVG Coefficient * AVG) + (OPS Coefficient * OPS) + (WAR:H Moderation Coefficient * (WAR * H)) + (WAR:OPS Moderation Coefficient * (WAR * OPS)))
@@ -479,6 +480,9 @@ mean(FreeAgencyOPS_Results$Model_Difference)
 # Standard Deviation
 sd(FreeAgencyOPS_Results$Model_Difference)
 # .9736621
+
+summary(FreeAgencyOPS_Results$Model_Difference)
+
 
 ## Saving Free Agency Results Data Set
 write.csv(FreeAgencyERA_Results, "FreeAgencyERA_Results.csv", row.names = FALSE)

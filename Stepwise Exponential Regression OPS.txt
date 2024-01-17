@@ -171,3 +171,5 @@ F-statistic: 90.61 on 3 and 274 DF,  p-value: < 2.2e-16
 Significant p = .00288
 49.25%
 
+
+Predicted_Salary <- exp(14.125269 + 0.215630*WAR - 0.022076*AGE + 0.008152*H - 6.927712*AVG + 3.627472*OPS - 0.0018766*(WAR * H))

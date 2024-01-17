@@ -44,7 +44,7 @@ Predicted_Salary <- exp(16.064277) * exp(-0.023938*AGE) * exp(0.004216*IP) * exp
 
 
 Mediation Analysis
-Mediator(IP) IV(WAR) DV(AVG. SALARY
+Mediator(IP) IV(WAR) DV(AVG. SALARY)
 Call:
 lm(formula = IP ~ WAR, data = FreeAgencyERA)
 
