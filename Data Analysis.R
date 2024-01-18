@@ -249,25 +249,6 @@ yrange <- c(0, max(cooksd, threshold) * 1.1)
 plot(cooksd, ylim = yrange, main = "Influential Observations by Cook's distance", pch = 16)
   abline(h = threshold, col = "red")
 
-  
-  
-
-# Multiple Linear Regression OPS
-model_OPS_multiLinear <- lm(`AVG. SALARY` ~ OPS + WAR + H + RBI + HR + AVG + PosNumber, data = FreeAgencyOPS)
-summary(model_OPS_multiLinear)
-# Significance in WAR and HR only
-
-predictions_OPS <- predict(model_OPS_multiLinear, newdata = FreeAgencyOPS)
-plot(model_OPS_multiLinear, which = 1)
-plot(model_OPS_multiLinear$fitted.values, model_OPS_multiLinear$residuals,
-     xlab = "Predicted values", ylab = "Residuals")
-  abline(h = 0, col = "red")
-
-
-  
-
-## Check for mediation and moderation while running step wise linear regression
-# ERA
 
 # Step wise Exponential regression
 step_model_ERA <- step(lm(log(`AVG. SALARY`) ~ AGE + IP + ERA + WHIP + W + SV + WAR, data = FreeAgencyERA), direction = "both")
@@ -520,4 +501,27 @@ write.csv(FreeAgencyERA_Results, "FreeAgencyERA_Results.csv", row.names = FALSE)
 write.csv(FreeAgencyOPS_Results, "FreeAgencyOPS_Results.csv", row.names = FALSE)
 
 
+
+# Step wise Linear Regression OPS
+model_OPS_Linear <- step(lm(`AVG. SALARY` ~ OPS + WAR + H + RBI + HR + AVG + PosNumber, data = FreeAgencyOPS))
+summary(model_OPS_Linear)
+# Significance in WAR and HR only
+
+moderation_model_OPS_HR_Linear <- lm(`AVG. SALARY` ~ WAR * HR, data = FreeAgencyOPS)
+summary(moderation_model_OPS_HR_Linear)
+
+FreeAgencyOPS_Results$Predicted_Salary_Linear <- 1329356 + 2791183*FreeAgencyOPS_Results$WAR + 228022*FreeAgencyOPS_Results$OPS
+# Percent Change = ((Predicted - AVG.SALARY)/AVG. SALARY)
+FreeAgencyOPS_Results$Model_Error_Linear <- ((FreeAgencyOPS_Results$`AVG. SALARY` - FreeAgencyOPS_Results$Predicted_Salary_Linear)/FreeAgencyOPS_Results$`AVG. SALARY`)
+
+# Percent Difference = |Predicted – Observed|/[(Predicted + Observed)/2]
+FreeAgencyOPS_Results$Model_Difference_Linear <- abs(FreeAgencyOPS_Results$`AVG. SALARY` - FreeAgencyOPS_Results$Predicted_Salary_Linear) / ((FreeAgencyOPS_Results$Predicted_Salary_Linear + FreeAgencyOPS_Results$`AVG. SALARY`)/2)
+
+# Average Error
+mean(FreeAgencyOPS_Results$Model_Error_Linear)
+# -.02227511 = -2.23%
+
+# Average Difference
+mean(FreeAgencyOPS_Results$Model_Difference_Linear)
+# 1.004004 = 100%
 
