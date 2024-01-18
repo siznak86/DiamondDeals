@@ -448,39 +448,70 @@ moderation_model_OPS_OPS <- lm(log(`AVG. SALARY`) ~ WAR * OPS, data = FreeAgency
 summary(moderation_model_OPS_OPS)
 # Not Significant
 
+moderation_model_OPS_HR <- lm(log(`AVG. SALARY`) ~ WAR * HR, data = FreeAgencyOPS)
+summary(moderation_model_OPS_HR)
+
+moderation_model_OPS_RBI <- lm(log(`AVG. SALARY`) ~ WAR * RBI, data = FreeAgencyOPS)
+summary(moderation_model_OPS_RBI)
 
 # Creating a Model
 # ERA
 # Salary = exp(Intercept + (WAR Coefficient * WAR) + (AGE Coefficient * AGE) + (IP Coefficient * IP) + (ERA Coefficient * ERA) + (WHIP Coefficient * WHIP) + (W Coefficient * W) + (SV Coefficient * SV) + (WAR:IP Moderation Coefficient * (WAR * IP)) + (WAR:W Moderation Coefficient * (WAR * W)))
 FreeAgencyERA_Results$Predicted_Salary <- exp(16.064277 +  0.154367*FreeAgencyERA_Results$WAR - 0.023938*FreeAgencyERA_Results$AGE + 0.004216*FreeAgencyERA_Results$IP + 0.045483*FreeAgencyERA_Results$ERA - 0.721570*FreeAgencyERA_Results$WHIP + 0.054429*FreeAgencyERA_Results$W + 0.025936*FreeAgencyERA_Results$SV - 0.0012974*(FreeAgencyERA_Results$WAR * FreeAgencyERA_Results$IP) - 0.01393*(FreeAgencyERA_Results$WAR * FreeAgencyERA_Results$W)) 
-                                              
-# Percent Difference = ((Predicted - AVG.SALARY)/AVG. SALARY)
-FreeAgencyERA_Results$Model_Difference <- ((FreeAgencyERA_Results$Predicted_Salary - FreeAgencyERA_Results$`AVG. SALARY`)/FreeAgencyERA_Results$`AVG. SALARY`)
+
+# Percent Error = ((Predicted - AVG.SALARY)/AVG. SALARY)
+FreeAgencyERA_Results$Model_Error <- ((FreeAgencyERA_Results$`AVG. SALARY` - FreeAgencyERA_Results$Predicted_Salary)/FreeAgencyERA_Results$`AVG. SALARY`)
+
+# Average Error
+mean(FreeAgencyERA_Results$Model_Error)
+# -.1343679 = -13.44%
+
+# Standard Deviation of Error
+sd(FreeAgencyERA_Results$Model_Error)
+# 1.051311
+
+summary(FreeAgencyERA_Results$Model_Error)
+
+# Percent Difference = |Predicted – Observed|/[(Predicted + Observed)/2]
+FreeAgencyERA_Results$Model_Difference <- abs(FreeAgencyERA_Results$`AVG. SALARY` - FreeAgencyERA_Results$Predicted_Salary) / ((FreeAgencyERA_Results$Predicted_Salary + FreeAgencyERA_Results$`AVG. SALARY`)/2)
 
 # Average Difference
 mean(FreeAgencyERA_Results$Model_Difference)
-# .1343679 = 13.44%
+# .6486968 = 65%
 
-# Standard Deviation
+# Standard Deviation of Difference
 sd(FreeAgencyERA_Results$Model_Difference)
-# 1.051311
+# .4261189
 
 summary(FreeAgencyERA_Results$Model_Difference)
 
 # OPS
-# Salary = exp(Intercept + (WAR Coefficient * WAR) + (AGE Coefficient * AGE) + (H Coefficient * H) + (AVG Coefficient * AVG) + (OPS Coefficient * OPS) + (WAR:H Moderation Coefficient * (WAR * H)) + (WAR:OPS Moderation Coefficient * (WAR * OPS)))
+# Salary = exp(Intercept + (WAR Coefficient * WAR) + (AGE Coefficient * AGE) + (H Coefficient * H) + (AVG Coefficient * AVG) + (OPS Coefficient * OPS) + (WAR:H Moderation Coefficient * (WAR * H)))
 FreeAgencyOPS_Results$Predicted_Salary <- exp(14.125269 + 0.215630*FreeAgencyOPS_Results$WAR - 0.022076*FreeAgencyOPS_Results$AGE + 0.008152*FreeAgencyOPS_Results$H - 6.927712*FreeAgencyOPS_Results$AVG + 3.627472*FreeAgencyOPS_Results$OPS - 0.0018766*(FreeAgencyOPS_Results$WAR * FreeAgencyOPS_Results$H))
-# Percent Difference = ((Predicted - AVG.SALARY)/AVG. SALARY)
-FreeAgencyOPS_Results$Model_Difference <- ((FreeAgencyOPS_Results$Predicted_Salary - FreeAgencyOPS_Results$`AVG. SALARY`)/FreeAgencyOPS_Results$`AVG. SALARY`)
 
-# Averge Difference
-mean(FreeAgencyOPS_Results$Model_Difference)
-# .0874656 = 8.75%
+# Percent Change = ((Predicted - AVG.SALARY)/AVG. SALARY)
+FreeAgencyOPS_Results$Model_Error <- ((FreeAgencyOPS_Results$`AVG. SALARY` - FreeAgencyOPS_Results$Predicted_Salary)/FreeAgencyOPS_Results$`AVG. SALARY`)
 
-# Standard Deviation
-sd(FreeAgencyOPS_Results$Model_Difference)
+# Percent Difference = |Predicted – Observed|/[(Predicted + Observed)/2]
+FreeAgencyOPS_Results$Model_Difference <- abs(FreeAgencyOPS_Results$`AVG. SALARY` - FreeAgencyOPS_Results$Predicted_Salary) / ((FreeAgencyOPS_Results$Predicted_Salary + FreeAgencyOPS_Results$`AVG. SALARY`)/2)
+
+# Average Error
+mean(FreeAgencyOPS_Results$Model_Error)
+# -.0874656 = -8.75%
+
+# Standard Deviation of Error
+sd(FreeAgencyOPS_Results$Model_Error)
 # .9736621
 
+# Average Difference
+mean(FreeAgencyOPS_Results$Model_Difference)
+# .6596408 = 66%
+
+# Standard Deviation of Error
+sd(FreeAgencyOPS_Results$Model_Difference)
+# .4149471
+
+summary(FreeAgencyOPS_Results$Model_Error)
 summary(FreeAgencyOPS_Results$Model_Difference)
 
 

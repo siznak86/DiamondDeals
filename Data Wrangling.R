@@ -128,7 +128,7 @@ FreeAgencyOPS_Results <- FreeAgencyOPS
 drop1 <- c("POS.", "YRS", "DOLLARS", "YEAR", "DummyPos", "PosNumber")
 FreeAgencyERA_Results = FreeAgencyERA_Results[,!(names(FreeAgencyERA_Results) %in% drop1)]
 
-drop2 <- c("POS.", "YRS", "DOLLARS", "YEAR","DummyPos", "PosNumber")
+drop2 <- c("POS.", "YRS", "DOLLARS", "YEAR","DummyPos", "PosNumber",)
 FreeAgencyOPS_Results = FreeAgencyOPS_Results[,!(names(FreeAgencyOPS_Results) %in% drop2)]
 
 ## Saving Free Agency Results Data Set
