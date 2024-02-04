@@ -225,6 +225,7 @@ ggplot(FreeAgencyOPS, aes(x = WAR, y = `AVG. SALARY`)) +
 model_ERA_multiLinear <- lm(`AVG. SALARY` ~ ERA + WAR + IP + WHIP + W + SV, data = FreeAgencyERA)
 summary(model_ERA_multiLinear)
 #Significance found in all except IP 
+#R-Squared = .5259 = 52.6%
 
 predictions_ERA <- predict(model_ERA_multiLinear, newdata = FreeAgencyERA)
 plot(model_ERA_multiLinear)
@@ -254,6 +255,7 @@ plot(cooksd, ylim = yrange, main = "Influential Observations by Cook's distance"
 step_model_ERA <- step(lm(log(`AVG. SALARY`) ~ AGE + IP + ERA + WHIP + W + SV + WAR, data = FreeAgencyERA), direction = "both")
 
 summary(step_model_ERA)
+#R-Squared = .4547 = 45.5%
 
 # Mediation analysis
 FreeAgencyERA$log_AVG_SALARY <- log(FreeAgencyERA$`AVG. SALARY`)
@@ -361,6 +363,7 @@ summary(moderation_model_ERA_SV)
 step_model_OPS <- step(lm(log(`AVG. SALARY`) ~ AGE + H + RBI + HR + AVG + OPS + WAR, data = FreeAgencyOPS), direction = "both")
 
 summary(step_model_OPS)
+#R-Squared = .5207 = 52%
 
 # Mediation analysis
 FreeAgencyOPS$log_AVG_SALARY <- log(FreeAgencyOPS$`AVG. SALARY`)
@@ -441,15 +444,15 @@ summary(moderation_model_OPS_RBI)
 FreeAgencyERA_Results$Predicted_Salary <- exp(16.064277 +  0.154367*FreeAgencyERA_Results$WAR - 0.023938*FreeAgencyERA_Results$AGE + 0.004216*FreeAgencyERA_Results$IP + 0.045483*FreeAgencyERA_Results$ERA - 0.721570*FreeAgencyERA_Results$WHIP + 0.054429*FreeAgencyERA_Results$W + 0.025936*FreeAgencyERA_Results$SV - 0.0012974*(FreeAgencyERA_Results$WAR * FreeAgencyERA_Results$IP) - 0.01393*(FreeAgencyERA_Results$WAR * FreeAgencyERA_Results$W)) 
 
 # Percent Error = ((Predicted - AVG.SALARY)/AVG. SALARY)
-FreeAgencyERA_Results$Model_Error <- ((FreeAgencyERA_Results$`AVG. SALARY` - FreeAgencyERA_Results$Predicted_Salary)/FreeAgencyERA_Results$`AVG. SALARY`)
+FreeAgencyERA_Results$Model_Error <- abs((FreeAgencyERA_Results$Predicted_Salary - FreeAgencyERA_Results$`AVG. SALARY`)/FreeAgencyERA_Results$`AVG. SALARY`)
 
 # Average Error
 mean(FreeAgencyERA_Results$Model_Error)
-# -.1343679 = -13.44%
+# .7219167 = 72.2%
 
 # Standard Deviation of Error
 sd(FreeAgencyERA_Results$Model_Error)
-# 1.051311
+# .7749981
 
 summary(FreeAgencyERA_Results$Model_Error)
 
@@ -471,18 +474,18 @@ summary(FreeAgencyERA_Results$Model_Difference)
 FreeAgencyOPS_Results$Predicted_Salary <- exp(14.125269 + 0.215630*FreeAgencyOPS_Results$WAR - 0.022076*FreeAgencyOPS_Results$AGE + 0.008152*FreeAgencyOPS_Results$H - 6.927712*FreeAgencyOPS_Results$AVG + 3.627472*FreeAgencyOPS_Results$OPS - 0.0018766*(FreeAgencyOPS_Results$WAR * FreeAgencyOPS_Results$H))
 
 # Percent Change = ((Predicted - AVG.SALARY)/AVG. SALARY)
-FreeAgencyOPS_Results$Model_Error <- ((FreeAgencyOPS_Results$`AVG. SALARY` - FreeAgencyOPS_Results$Predicted_Salary)/FreeAgencyOPS_Results$`AVG. SALARY`)
+FreeAgencyOPS_Results$Model_Error <- abs((FreeAgencyOPS_Results$Predicted_Salary - FreeAgencyOPS_Results$`AVG. SALARY`)/FreeAgencyOPS_Results$`AVG. SALARY`)
 
 # Percent Difference = |Predicted – Observed|/[(Predicted + Observed)/2]
 FreeAgencyOPS_Results$Model_Difference <- abs(FreeAgencyOPS_Results$`AVG. SALARY` - FreeAgencyOPS_Results$Predicted_Salary) / ((FreeAgencyOPS_Results$Predicted_Salary + FreeAgencyOPS_Results$`AVG. SALARY`)/2)
 
 # Average Error
 mean(FreeAgencyOPS_Results$Model_Error)
-# -.0874656 = -8.75%
+# .6968027 = 69.7%
 
 # Standard Deviation of Error
 sd(FreeAgencyOPS_Results$Model_Error)
-# .9736621
+# .684404
 
 # Average Difference
 mean(FreeAgencyOPS_Results$Model_Difference)
