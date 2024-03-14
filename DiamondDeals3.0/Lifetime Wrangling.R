@@ -4,7 +4,7 @@ library(tidyr)
 library(formattable)
 library(stringr)
 library(stringi)
-
+library(ggplot2)
 
 # Collecting Batting Life Time of Active Players
 
@@ -104,5 +104,8 @@ write.csv(finalPitching, "finalPitching.csv", row.names = FALSE)
 Batting <- data.frame(Player = finalBatting$Player, AvgSalary = finalBatting$AvgSalary)
 Pitching <- data.frame(Player = finalPitching$Player, AvgSalary = finalPitching$AvgSalary)
 
-
-
+# Dropping Ohtani
+finalBatting <- subset(finalBatting, Player != "Shohei Ohtani")
+Batting <- subset(Batting, Player != "Shohei Ohtani")
+finalPitching <- subset(finalPitching, Player != "Shohei Ohtani")
+Pitching <- subset(Pitching, Player != "Shohei Ohtani")
